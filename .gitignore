@@ -32,3 +32,11 @@ Thumbs.db
 
 # Coverage
 coverage/
+/android
+/ios
+/linux
+/macos
+/web
+/windows
+pubspec.lock
+.metadata

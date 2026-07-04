@@ -244,7 +244,7 @@ class _ProfileCardPlaceholder extends StatelessWidget {
 class _QuickStats extends StatelessWidget {
   const _QuickStats({required this.userAsync, required this.itemsAsync});
   final AsyncValue userAsync;
-  final AsyncValue itemsAsync;
+  final AsyncValue<List<dynamic>> itemsAsync;
 
   @override
   Widget build(BuildContext context) {
@@ -253,7 +253,10 @@ class _QuickStats extends StatelessWidget {
     final avg = count > 0 ? total / count : 0.0;
     final biggest = itemsAsync.valueOrNull?.fold<double>(
           0,
-          (a, e) => e.price > a ? e.price : a,
+          (a, e) {
+            final price = (e as dynamic).price as double;
+            return price > a ? price : a;
+          },
         ) ??
         0.0;
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'app.dart';
 
@@ -10,6 +11,9 @@ import 'app.dart';
 /// ve tüm widget ağacını bir [ProviderScope] ile sarar.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Türkçe tarih/saat formatlaması için locale başlatma.
+  await initializeDateFormatting('tr_TR', null);
 
   // .env opsiyonel — yoksa mock modunda çalışmaya devam et.
   try {

@@ -128,4 +128,4 @@ Map<String, dynamic> withLocalTimestamp(Map<String, dynamic> payload) {
 }
 
 /// Backend Steering kategorilerini LLM prompt'una referans olarak eklemek için.
-const String knownCategoriesPayload = AppConstants.knownCategories.join(', ');
+final String knownCategoriesPayload = AppConstants.knownCategories.join(', ');
