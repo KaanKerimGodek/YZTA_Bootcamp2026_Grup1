@@ -54,57 +54,59 @@ class InsightCard extends StatelessWidget {
           ),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      'AI İçgörü',
-                      style: AppTypography.labelCaps.copyWith(
-                        color: AppColors.successEmerald,
-                        fontWeight: FontWeight.w600,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'AI İçgörü',
+                        style: AppTypography.labelCaps.copyWith(
+                          color: AppColors.successEmerald,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                    if (insight.amount != null) ...[
-                      const SizedBox(width: AppSpacing.xs),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.successEmerald.withOpacity(0.12),
-                          borderRadius: BorderRadius.circular(AppShapes.full),
-                        ),
-                        child: Text(
-                          Formatting.saved(insight.amount!),
-                          style: AppTypography.labelSubtext.copyWith(
-                            color: AppColors.successEmerald,
-                            fontWeight: FontWeight.w700,
+                      if (insight.amount != null) ...[
+                        const SizedBox(width: AppSpacing.xs),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.successEmerald.withOpacity(0.12),
+                            borderRadius: BorderRadius.circular(AppShapes.full),
+                          ),
+                          child: Text(
+                            Formatting.saved(insight.amount!),
+                            style: AppTypography.labelSubtext.copyWith(
+                              color: AppColors.successEmerald,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ],
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.xs + 2),
-                Text(
-                  insight.text,
-                  style: AppTypography.bodyMain.copyWith(
-                    color: AppColors.textPrimary,
-                    height: 1.45,
                   ),
-                ),
-                const SizedBox(height: AppSpacing.xs + 2),
-                Text(
-                  Formatting.relativeDay(insight.generatedAt),
-                  style: AppTypography.labelSubtext.copyWith(
-                    color: AppColors.textSecondary,
+                  const SizedBox(height: AppSpacing.xs + 2),
+                  Text(
+                    insight.text,
+                    style: AppTypography.bodyMain.copyWith(
+                      color: AppColors.textPrimary,
+                      height: 1.45,
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: AppSpacing.xs + 2),
+                  Text(
+                    Formatting.relativeDay(insight.generatedAt),
+                    style: AppTypography.labelSubtext.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
