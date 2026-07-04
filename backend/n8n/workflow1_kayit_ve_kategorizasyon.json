@@ -1,0 +1,235 @@
+{
+  "name": "Vazgeçtim — Workflow 1: Kayıt & Kategorizasyon",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vazgec-ekle",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook (Vazgeçiş)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "vazgec-ekle-webhook",
+      "notes": "Frontend (Flutter) buraya POST eder.\nBeklenen payload: { user_id, item_name, price, raw_category?, client_timestamp, timezone }"
+    },
+    {
+      "parameters": {
+        "jsCode": "// --- Validation (Backend Steering → Workflow 1, Node 1) ---\nconst body = $input.first().json.body || $input.first().json;\n\nconst userId = body.user_id;\nconst itemName = (body.item_name || '').toString().trim();\nconst price = parseFloat(body.price);\nconst rawCategory = body.raw_category ? body.raw_category.toString().trim() : null;\nconst clientTimestamp = body.client_timestamp;\nconst timezone = body.timezone;\n\nconst errors = [];\nif (!userId) errors.push('user_id zorunludur');\nif (!itemName) errors.push('item_name boş olamaz');\nif (isNaN(price) || price <= 0) errors.push('price 0\\'dan büyük olmalı');\n\nif (errors.length > 0) {\n  // 400 Bad Request — frontend'e erken döner\n  throw new Error('VALIDATION_FAILED: ' + errors.join('; '));\n}\n\nreturn [{\n  json: {\n    user_id: userId,\n    item_name: itemName,\n    price: price,\n    raw_category: rawCategory,\n    client_timestamp: clientTimestamp,\n    timezone: timezone\n  }\n}];"
+      },
+      "id": "validation-node",
+      "name": "Doğrulama (Validation)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "has-raw-category",
+              "leftValue": "={{ $json.raw_category }}",
+              "rightValue": "",
+              "operator": { "type": "string", "operation": "notEmpty", "name": "filter:notEmpty" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-has-raw-category",
+      "name": "Ham kategori var mı?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "modelId": "gemini-1.5-flash",
+        "messages": {
+          "messageValues": [
+            {
+              "role": "system",
+              "content": "Sen bir tasarruf asistanısın. Verilen ürün adını SADECE şu kategorilerden birine sınıflandır: Yemek, İçecek, Giyim, Eğlence, Ulaşım, Teknoloji, Kişisel Bakım, Diğer. Yanıt olarak yalnızca kategori adını döndür, başka hiçbir şey ekleme."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Ürün: ' + $json.item_name }}"
+            }
+          ]
+        },
+        "options": { "temperature": 0.1, "maxOutputTokens": 10 }
+      },
+      "id": "llm-categorize",
+      "name": "LLM Kategorizasyon (Gemini Flash)",
+      "type": "@n8n/n8n-nodes-langchain.modelLanguageModel",
+      "typeVersion": 1,
+      "position": [920, 220],
+      "notes": "Maliyet optimizasyonu → Gemini Flash (Steering → Maliyet Yönetimi)."
+    },
+    {
+      "parameters": {
+        "jsCode": "// LLM yanıtını temizle + known sete zorla; değilse 'Diğer' (fallback).\nconst KNOWN = ['Yemek','İçecek','Giyim','Eğlence','Ulaşım','Teknoloji','Kişisel Bakım','Diğer'];\nconst raw = ($input.first().json.content || '').toString().trim();\nconst match = KNOWN.find(k => raw.toLowerCase().includes(k.toLowerCase()));\nreturn [{ json: { ai_category: match || 'Diğer' } }];"
+      },
+      "id": "parse-category",
+      "name": "Kategori Ayrıştır",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1140, 220]
+    },
+    {
+      "parameters": {
+        "jsCode": "// raw_category dolu ise onu kullan; LLM sonucunu yoksay.\nreturn [{ json: { ai_category: $json.raw_category } }];"
+      },
+      "id": "use-raw-category",
+      "name": "Ham kategori kullan",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [920, 400]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll"
+      },
+      "id": "merge-category",
+      "name": "Kategori Birleştir",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2,
+      "position": [1360, 300]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "skipped_items",
+        "columns": "item_id,user_id,item_name,price,raw_category,ai_category,created_at",
+        "additionalFields": {
+          "data": "={{ JSON.stringify({ item_id: $uuid, user_id: $('Doğrulama (Validation)').item.json.user_id, item_name: $('Doğrulama (Validation)').item.json.item_name, price: $('Doğrulama (Validation)').item.json.price, raw_category: $('Doğrulama (Validation)').item.json.raw_category, ai_category: $json.ai_category, created_at: $('Doğrulama (Validation)').item.json.client_timestamp || new Date().toISOString() }) }}"
+        }
+      },
+      "id": "supabase-insert",
+      "name": "Supabase — Insert",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1580, 300],
+      "notes": "RLS bypass için service_role key kullanılır (Credentials içinde)."
+    },
+    {
+      "parameters": {
+        "operation": "execute",
+        "functionName": "get_total_saved",
+        "parametersUi": {
+          "parameterValues": [
+            { "name": "p_user_id", "value": "={{ $('Doğrulama (Validation)').item.json.user_id }}" }
+          ]
+        }
+      },
+      "id": "fetch-total-saved",
+      "name": "Güncel Toplam",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [1800, 300],
+      "notes": "users.total_saved trigger ile zaten güncellendi; bu node yalnızca okur."
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, item_id: $('Supabase — Insert').item.json.item_id, ai_category: $('Kategori Birleştir').item.json.ai_category, total_saved: $json.get_total_saved } }}",
+        "options": { "responseCode": 200 }
+      },
+      "id": "response-success",
+      "name": "Yanıt (200)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2020, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: false, error: $json.error || $json.message || 'Doğrulama başarısız', code: 'VALIDATION_FAILED' } }}",
+        "options": { "responseCode": 400 }
+      },
+      "id": "response-validation-error",
+      "name": "Yanıt (400)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [460, 540]
+    },
+    {
+      "parameters": {
+        "jsCode": "// --- Fallback (Steering → Hata Yönetimi) ---\n// LLM başarısız olursa ai_category = 'Diğer' ile devam et, sistemi çökertme.\nreturn [{\n  json: {\n    ...$input.first().json,\n    ai_category: 'Diğer'\n  }\n}];"
+      },
+      "id": "llm-fallback",
+      "name": "LLM Fallback (Catch)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1140, 80],
+      "notes": "LLM çağrısı format dışı/timeout ise 'Diğer' atanır, akış kesintisiz devam eder.",
+      "continueOnFail": true
+    }
+  ],
+  "connections": {
+    "Webhook (Vazgeçiş)": {
+      "main": [
+        [ { "node": "Doğrulama (Validation)", "type": "main", "index": 0 } ]
+      ]
+    },
+    "Doğrulama (Validation)": {
+      "main": [
+        [ { "node": "Ham kategori var mı?", "type": "main", "index": 0 } ]
+      ]
+    },
+    "Ham kategori var mı?": {
+      "main": [
+        [ { "node": "LLM Kategorizasyon (Gemini Flash)", "type": "main", "index": 0 } ],
+        [ { "node": "Ham kategori kullan", "type": "main", "index": 0 } ]
+      ]
+    },
+    "LLM Kategorizasyon (Gemini Flash)": {
+      "main": [
+        [ { "node": "Kategori Ayrıştır", "type": "main", "index": 0 } ]
+      ]
+    },
+    "Kategori Ayrıştır": {
+      "main": [
+        [ { "node": "Kategori Birleştir", "type": "main", "index": 0 } ]
+      ]
+    },
+    "Ham kategori kullan": {
+      "main": [
+        [ { "node": "Kategori Birleştir", "type": "main", "index": 0 } ]
+      ]
+    },
+    "Kategori Birleştir": {
+      "main": [
+        [ { "node": "Supabase — Insert", "type": "main", "index": 0 } ]
+      ]
+    },
+    "Supabase — Insert": {
+      "main": [
+        [ { "node": "Güncel Toplam", "type": "main", "index": 0 } ]
+      ]
+    },
+    "Güncel Toplam": {
+      "main": [
+        [ { "node": "Yanıt (200)", "type": "main", "index": 0 } ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "_notes": [
+    "Import: n8n → Workflows → Import from File → bu JSON.",
+    "Credentials ayarla: Supabase (service_role), Google Gemini API key.",
+    "Webhook Production URL'i alıp frontend .env → N8N_WEBHOOK_URL yaz.",
+    "Validation hatası node içinde throw edilir; n8n error trigger ile 400'e yönlendirilmeli (errorTrigger eklenerek)."
+  ]
+}

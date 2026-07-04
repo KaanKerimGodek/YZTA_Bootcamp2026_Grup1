@@ -1,284 +1,147 @@
-# <div align="center">
+# Vazgeçtim 🪙
 
-# 💡 Vazgeçtim
+> **Positive gain through intentional omission.**
+> Harcama değil — *vazgeçiş* takip eden bir finansal wellness uygulaması.
 
-### *"Harcamadığın her kuruş, geleceğine yapılan bir yatırımdır."*
-
-### 🚀 No-Code / Low-Code Bootcamp 2026
-
----
-
-![Durum](https://img.shields.io/badge/Durum-Sprint%201-blue)
-![Bootcamp](https://img.shields.io/badge/Bootcamp-2026-purple)
-![Bubble](https://img.shields.io/badge/Bubble-NoCode-blue)
-![n8n](https://img.shields.io/badge/n8n-Automation-orange)
-![Gemini](https://img.shields.io/badge/Gemini-AI-success)
-
-</div>
+Vazgeçilen her harcama bir tasarruf sayılır. Uygulama bu "kazançları" pozitif
+bir psikolojiyle gösterir: gradyan Hero Cüzdan, AI içgörüleri ve aktivite akışı.
 
 ---
 
-# 📖 Proje Hakkında
+## Mimari — İki Parça
 
-**Vazgeçtim**, kullanıcıların satın almaktan vazgeçtiği ürünleri veya gerçekleştirmemeyi tercih ettiği harcamaları kayıt altına alarak bunları görünür bir tasarrufa dönüştüren yapay zekâ destekli kişisel finans farkındalık uygulamasıdır.
+```
+┌──────────────────────────┐        ┌──────────────────────────┐
+│  FRONTEND (Flutter)      │        │  BACKEND (n8n+Supabase)  │
+│  Riverpod + go_router    │  POST  │  Workflow 1: Kayıt &     │
+│  Dio → n8n webhook        │ ────▶  │  kategorizasyon (LLM)    │
+│  Mock / Live modu        │        │  Workflow 2: Haftalık AI │
+│  4 ekran (DESIGN.md)     │  GET   │  içgörü (cron)           │
+│                           │ ────▶  │  Supabase: 3 tablo + RLS │
+└──────────────────────────┘        └──────────────────────────┘
+```
 
-Geleneksel bütçe uygulamaları yalnızca yapılan harcamaları takip ederken, **Vazgeçtim** kullanıcıların **yapmadığı harcamaları** başarıya dönüştürmeyi amaçlar.
-
-Kullanıcılar;
-
-- Satın almaktan vazgeçtikleri ürünleri,
-- Gitmekten vazgeçtikleri etkinlikleri,
-- Günlük hayatta yapmamayı tercih ettikleri harcamaları
-
-uygulamaya ekleyerek bu kararların toplam parasal değerini **Tasarruf Cüzdanı** içerisinde biriktirebilirler.
-
-İlerleyen sprintlerde entegre edilecek yapay zekâ desteği sayesinde kullanıcı davranışları analiz edilerek kişiselleştirilmiş finansal içgörüler sunulacaktır.
-
----
-
-# 🎯 Proje Vizyonu
-
-Bireylerin harcama alışkanlıklarını daha bilinçli hale getirmek, vazgeçilen harcamaları görünür kılarak tasarrufu motive eden yenilikçi ve oyunlaştırılmış bir finans deneyimi sunmak.
+- **Frontend**: [`/`](./) kök dizin — Flutter + Material 3 + Riverpod.
+- **Backend**: [`backend/`](./backend) — n8n workflow JSON'ları, Supabase şema, API kontratı.
 
 ---
 
-# 👥 Takım Üyeleri
+## Hızlı Başlangıç
 
-| Rol | Üye |
-|------|------|
-| Scrum Master | Hüsna Altın |
-| Product Owner | Elif İrem Akdoğan |
-| Developer | Kaan Kerim Gödek |
-| Developer | Tuana Nehir Baran |
-| Developer | Yağız Ali Çolak |
+### Önkoşullar
 
----
+- **Flutter SDK** ≥ 3.19 (stable) — https://docs.flutter.dev/get-started/install
+- Bir **Supabase** projesi (ücretsiz tier yeterli).
+- **n8n** (cloud veya self-hosted) — yalnızca `live` modu için.
+- **Google Gemini API key** — n8n içinde LLM kategorizasyon için.
 
-# 🎯 Hedef Kitle
+### 1. Frontend (Flutter)
 
-- Harcamalarını daha bilinçli yönetmek isteyen genç yetişkinler
-- Üniversite öğrencileri
-- Yeni mezunlar
-- Dürtüsel alışveriş alışkanlığına sahip bireyler
-- Kişisel finans farkındalığını artırmak isteyen herkes
+```bash
+# Proje dizinine gir
+cd vazgectim            # (repo köküyse: cd .)
 
----
+# Bağımlılıkları yükle
+flutter pub get
 
-# ✨ Ürün Özellikleri
+# Env dosyasını hazırla
+copy .env.example .env    # Windows
+cp .env.example .env      # macOS/Linux
 
-- 🛒 Sanal Sepet Deneyimi
-- 💰 Tasarruf Cüzdanı
-- 📝 Günlük Vazgeçiş Kaydı
-- 📊 Harcama Alışkanlığı Takibi
-- 🤖 Yapay Zekâ Destekli Davranış Analizi *(Sprint 2)*
-- 📈 Haftalık / Aylık Kişiselleştirilmiş İçgörüler *(Sprint 2)*
-- 🔔 Motivasyon ve Başarı Bildirimleri *(Sprint 2)*
+# .env içini düzenle:
+#   APP_MODE=mock         → backend olmadan demo verisiyle çalışır
+#   APP_MODE=live         → n8n + Supabase ile konuşur
 
----
+# Çalıştır
+flutter run
+```
 
-# 🛠️ Kullanılan Teknolojiler
+> **Not:** `APP_MODE=mock` ile hiç backend kurmadan uygulamanın tüm
+> ekranlarını demo verisiyle deneyebilirsin.
 
-| Kategori | Teknoloji |
-|-----------|------------|
-| No-Code Platform | Bubble |
-| Otomasyon | n8n |
-| Yapay Zekâ | Gemini API |
-| Veritabanı | Airtable / Google Sheets |
-| Tasarım | Figma |
-| Versiyon Kontrol | GitHub |
+### 2. Backend (n8n + Supabase)
+
+Ayrıntılı talimat için [`backend/README.md`](./backend/README.md).
+
+Özet:
+1. Supabase → SQL Editor → `backend/supabase/schema.sql` çalıştır.
+2. n8n → Import from File → 2 workflow JSON'unu içe aktar.
+3. n8n credentials: Supabase (service_role) + Google Gemini.
+4. Webhook URL'i `.env` → `N8N_WEBHOOK_URL` yaz.
 
 ---
 
-# 📋 Product Backlog
+## Ekranlar (DESIGN.md → Flutter uygulaması)
 
-Proje toplam **3 Sprint** olarak planlanmıştır.
+| Ekran | Dosya | İçerik |
+|-------|-------|--------|
+| **Ana Sayfa** | `lib/features/home/home_screen.dart` | Hero Wallet + AI Insight Carousel + Son Vazgeçişler |
+| **İstatistik** | `lib/features/stats/stats_screen.dart` | Özet kartları + kategori breakdown + haftalık bar grafik |
+| **Profil** | `lib/features/profile/profile_screen.dart` | Kullanıcı kartı + hızlı istatistik + ayarlar |
+| **Vazgeçiş Ekle** | `lib/features/add_transaction/add_transaction_sheet.dart` | Bottom sheet, kategori seçimi + AI fallback |
 
-| Sprint | Tema | Tarih Aralığı | Görev Sayısı |
-|----------|----------------------|------------------|:---:|
-| Sprint 1 | Temel Altyapı (Foundation) | 19 Haziran – 5 Temmuz | 9 |
-| Sprint 2 | Yapay Zekâ Katmanı | 6 Temmuz – 19 Temmuz | 9 |
-| Sprint 3 | Son Rötuşlar ve Teslim | 20 Temmuz – 2 Ağustos | 9 |
-
-Toplam planlanan görev sayısı **27**'dir.
-
----
-
-# 🚀 Sprint 1
-
-## 🎯 Sprint Amacı
-
-Sprint 1'in temel amacı, yapay zekâ entegrasyonu bulunmayan ancak uçtan uca çalışabilen bir temel ürün (MVP) oluşturmaktır.
-
-Sprint sonunda;
-
-- Temel kullanıcı akışı oluşturulmuş,
-- Arayüz tasarımları hazırlanmış,
-- Bubble altyapısı kurulmuş,
-- Kullanıcının vazgeçiş kaydı oluşturabileceği form geliştirilmiş,
-- n8n veri akışı kurulmuş,
-- Tasarruf Cüzdanı çalışır duruma getirilmiş olacaktır.
+**Bottom Nav**: Ana Sayfa · İstatistik · **[FAB]** · Profil — FAB ortada
+negatif margin ile yukarı taşmış, gradient + glow shadow.
 
 ---
 
-## 📌 Sprint Backlog
+## Proje Yapısı
 
-| No | Görev | Durum |
-|:--:|------------------------------|:--:|
-| 1 | GitHub Repository Kurulumu | ⬜ |
-| 2 | README Dokümantasyonu | ⬜ |
-| 3 | Sprint Board Oluşturulması | ⬜ |
-| 4 | Marka Kimliğinin Belirlenmesi | ⬜ |
-| 5 | Kullanıcı Akışının (User Flow) Hazırlanması | ⬜ |
-| 6 | Wireframe Tasarımlarının Oluşturulması | ⬜ |
-| 7 | Bubble Projesinin Kurulması | ⬜ |
-| 8 | "Vazgeçiş Ekle" Formunun Geliştirilmesi | ⬜ |
-| 9 | Tasarruf Cüzdanı ve n8n Entegrasyonu | ⬜ |
-
----
-
-# 📝 Sprint Notları
-
-Sprint 1 süresince projenin teknik ve görsel altyapısı oluşturulacaktır.
-
-Bu sprint kapsamında;
-
-- GitHub proje yapısı oluşturulacaktır.
-- Ürün kimliği belirlenecektir.
-- Kullanıcı deneyimi tasarlanacaktır.
-- Wireframe çalışmaları hazırlanacaktır.
-- Bubble platformunda temel uygulama geliştirilecektir.
-- Kullanıcının vazgeçtiği harcamaları ekleyebileceği form hazırlanacaktır.
-- n8n ile otomatik veri akışı kurulacaktır.
-- Tasarruf Cüzdanı oluşturularak toplam tasarruf miktarı gösterilecektir.
+```
+vazgectim/
+├── lib/
+│   ├── main.dart, app.dart               # bootstrap + MaterialApp
+│   ├── core/
+│   │   ├── theme/                         # DESIGN.md tokenları (renk/tipografi/spacing/shape)
+│   │   ├── constants/                     # kategoriler, para birimi
+│   │   └── utils/                         # formatting (₺, tarih), responsive
+│   ├── data/
+│   │   ├── models/                        # SkippedItem, AppUser, AiInsight
+│   │   ├── services/                      # api_client, n8n_webhook, mock_data
+│   │   ├── repositories/                  # abstract + mock/remote impl
+│   │   └── providers/                     # Riverpod DI + AsyncNotifier'lar
+│   ├── features/                          # home, add_transaction, stats, profile
+│   ├── shared/widgets/                    # gradient_button, hero_card, bottom_nav...
+│   ├── shared/layouts/main_scaffold.dart
+│   └── router/app_router.dart             # go_router (StatefulShellRoute)
+├── backend/                               # n8n + Supabase
+├── pubspec.yaml
+├── .env.example
+└── analysis_options.yaml
+```
 
 ---
 
-# 📊 Sprint Board
+## Tasarım Sistemi (DESIGN.md)
 
-Sprint ilerledikçe GitHub Project Board güncellenecektir.
-
-## 📝 To Do
-
-> *(Sprint sonunda ekran görüntüsü eklenecektir.)*
-
----
-
-## 🚧 In Progress
-
-> *(Sprint sonunda ekran görüntüsü eklenecektir.)*
+- **Tek light mode**, Slate-50 (#F8FAFC) arka plan + saf beyaz kartlar.
+- **Primary Gradient** 135° blue (#2563EB) → emerald (#10B981).
+- **Inter** font, dramatik hiyerarşi (`display-wallet` 36px/800).
+- **8pt grid**: spacing xs(4) · base(8) · sm(16) · md(24) · lg(32) · xl(48).
+- **Shapes**: sm(4) · md(12) · lg(16) · xl(24) · full(9999) · sheet(32).
+- **Semantic success** Emerald-500, vazgeçilen tutarlar `+₺` önekli.
+- Hero Card tinted glow shadow `rgba(37,99,235,0.15)`.
 
 ---
 
-## ✅ Done
+## Mock vs Live Modu
 
-> *(Sprint sonunda ekran görüntüsü eklenecektir.)*
+`AppConfig` (`.env` → `APP_MODE`) tek anahtarla iki mod arasında geçiş yapar:
 
----
+- **`mock`**: `MockDataService` demo verisi üretir — backend gerekmez.
+  Tüm UI akışları (vazgeçiş ekleme, listelerin güncellenmesi) çalışır.
+- **`live`**: `RemoteSavingsRepository` → n8n webhook + Supabase REST.
 
-# 📉 Burndown Chart
-
-Sprint sonunda görev ilerleyişini gösteren Burndown Chart bu alana eklenecektir.
-
-> *(Grafik eklenecektir.)*
-
----
-
-# 📝 Daily Scrum
-
-Takım üyeleri sprint boyunca düzenli Daily Scrum toplantıları gerçekleştirecektir.
-
-Toplantı notları ve ekran görüntüleri Sprint sonunda bu bölümde paylaşılacaktır.
+İki mod da aynı `SavingsRepository` soyutlamasını uyguladığı için UI katmanı
+değişmeden çalışır.
 
 ---
 
-# 📷 Ürün Durumu
+## Bilinen Sınırlar
 
-Sprint 1 sonunda geliştirilen ekran görüntüleri burada paylaşılacaktır.
-
-### 🏠 Ana Sayfa
-
-*(Ekran görüntüsü eklenecektir.)*
-
----
-
-### ➕ Vazgeçiş Ekle Sayfası
-
-*(Ekran görüntüsü eklenecektir.)*
-
----
-
-### 💰 Tasarruf Cüzdanı
-
-*(Ekran görüntüsü eklenecektir.)*
-
----
-
-# 🎥 Demo
-
-Proje tanıtım videosu Sprint 3 sonunda eklenecektir.
-
----
-
-# 📌 Sprint Review
-
-## Planlanan Görev Sayısı
-
-**9**
-
-## Tamamlanan Görevler
-
-*Sprint sonunda güncellenecektir.*
-
-## Tamamlanamayan Görevler
-
-*Sprint sonunda güncellenecektir.*
-
-## Ürün Demo Çıktıları
-
-*Sprint sonunda eklenecektir.*
-
-## Değerlendirme Notları
-
-*Sprint sonunda güncellenecektir.*
-
----
-
-# 🔄 Sprint Retrospective
-
-## ✅ İyi Giden Noktalar
-
-*Sprint sonunda doldurulacaktır.*
-
----
-
-## ⚠️ Geliştirilmesi Gereken Noktalar
-
-*Sprint sonunda doldurulacaktır.*
-
----
-
-## 🚀 Bir Sonraki Sprint İçin Aksiyonlar
-
-*Sprint sonunda doldurulacaktır.*
-
----
-
-# 📅 Sonraki Sprint
-
-Sprint 2 kapsamında aşağıdaki geliştirmelerin yapılması planlanmaktadır:
-
-- 🤖 Gemini API entegrasyonu
-- 🏷️ Otomatik kategori belirleme
-- 📊 Yapay zekâ destekli davranış analizi
-- 📈 Haftalık kişiselleştirilmiş içgörü raporları
-- 🔔 Otomatik bildirim sistemi
-
----
-
-<div align="center">
-
-### ❤️ No-Code / Low-Code Bootcamp 2026 kapsamında geliştirilmektedir.
-
-**Vazgeçtim © 2026**
-
-</div>
+- **Flutter SDK bu ortamda kurulu değil** — kod yazıldı ama `flutter run`
+  derlemesi SDK kurulana kadar doğrulanamadı. `flutter pub get` + `flutter run`
+  sonrası kutudan çıktığı gibi derlenecek şekilde hazırlandı.
+- **Auth**: demo `USER_ID` ile çalışır; üretimde Supabase Auth ile
+  `users.user_id = auth.uid()` bağlanmalı.
+- **Sprint Planı PDF**'ine erişim yoktu → scope bu README'deki gibidir.
