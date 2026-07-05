@@ -89,6 +89,7 @@ Toplam planlanan görev sayısı **27**'dir.
 
 Backlog Dağıtım Mantığı
 Görevler şu mantıkla 3 sprint'e bölündü:
+
 •	Sprint 1 — Temel (Foundation): AI olmadan da çalışan bir iskelet ürün. Takım kimliği, tasarım, temel veri akışı ve cüzdan mantığı bu sprintte oturtulur. Amaç: Sprint 1 sonunda elle test edilebilir, uçtan uca (baştan sona) çalışan basit bir prototip olması.
 •	Sprint 2 — Akıllı Katman (Intelligence): Yapay zeka entegrasyonu bu sprintte gelir: kategori sınıflandırma, davranış analizi, doğal dilde içgörü üretimi. Amaç: Final değerlendirmedeki 35 puanlık "Yapay Zeka Öğeleri" kriterinin temelini bu sprintte sağlamlaştırmak.
 •	Sprint 3 — Cilalama ve Teslim (Polish & Delivery): UI/UX iyileştirme, hataların giderilmesi, kullanıcı testi, video ve son teslim dokümantasyonu. Amaç: "Ürün bütünlüğü" ve "Fonksiyonel yeterlilik" kriterlerini maksimize etmek.
