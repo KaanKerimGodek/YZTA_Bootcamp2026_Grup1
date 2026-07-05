@@ -143,6 +143,10 @@ Sprint sonunda;
 |------------------|----------------------|----------------------|---------------|
 | <img width="200" src="images/anasayfa.png"> | <img width="200" src="images/vazgecisekle.png"> | <img width="200" src="images/istatistikler.png"> |<img width="200" src="images/profil.png"> |
 
+| Ana Sayfa(Web) | Vazgeçiş Ekle(Web) | İstatistikler(Web) |İstatistikler(Web) |
+|----------------|--------------------|--------------------|-------------------|
+| <img width="200" src="images/web-anasayfa1.png"> | <img width="200" src="images/web-ekleme.png"> | <img width="200" src="images/web-istatistik1.png"> |<img width="200" src="images/web-istatistik2.png"> |
+
 ---
 
   ### Sprint Review:
