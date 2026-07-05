@@ -10,7 +10,6 @@
 
 ![Durum](https://img.shields.io/badge/Durum-Sprint%201-blue)
 ![Bootcamp](https://img.shields.io/badge/Bootcamp-2026-purple)
-![Bubble](https://img.shields.io/badge/Bubble-NoCode-blue)
 ![n8n](https://img.shields.io/badge/n8n-Automation-orange)
 ![Gemini](https://img.shields.io/badge/Gemini-AI-success)
 
@@ -70,22 +69,9 @@ Bireylerin harcama alışkanlıklarını daha bilinçli hale getirmek, vazgeçil
 - 💰 Tasarruf Cüzdanı
 - 📝 Günlük Vazgeçiş Kaydı
 - 📊 Harcama Alışkanlığı Takibi
-- 🤖 Yapay Zekâ Destekli Davranış Analizi *(Sprint 2)*
-- 📈 Haftalık / Aylık Kişiselleştirilmiş İçgörüler *(Sprint 2)*
-- 🔔 Motivasyon ve Başarı Bildirimleri *(Sprint 2)*
-
----
-
-# 🛠️ Kullanılan Teknolojiler
-
-| Kategori | Teknoloji |
-|-----------|------------|
-| No-Code Platform | Bubble |
-| Otomasyon | n8n |
-| Yapay Zekâ | Gemini API |
-| Veritabanı | Airtable / Google Sheets |
-| Tasarım | Figma |
-| Versiyon Kontrol | GitHub |
+- 🤖 Yapay Zekâ Destekli Davranış Analizi 
+- 📈 Haftalık / Aylık Kişiselleştirilmiş İçgörüler 
+- 🔔 Motivasyon ve Başarı Bildirimleri 
 
 ---
 
@@ -101,6 +87,13 @@ Proje toplam **3 Sprint** olarak planlanmıştır.
 
 Toplam planlanan görev sayısı **27**'dir.
 
+Backlog Dağıtım Mantığı
+Görevler şu mantıkla 3 sprint'e bölündü:
+•	Sprint 1 — Temel (Foundation): AI olmadan da çalışan bir iskelet ürün. Takım kimliği, tasarım, temel veri akışı ve cüzdan mantığı bu sprintte oturtulur. Amaç: Sprint 1 sonunda elle test edilebilir, uçtan uca (baştan sona) çalışan basit bir prototip olması.
+•	Sprint 2 — Akıllı Katman (Intelligence): Yapay zeka entegrasyonu bu sprintte gelir: kategori sınıflandırma, davranış analizi, doğal dilde içgörü üretimi. Amaç: Final değerlendirmedeki 35 puanlık "Yapay Zeka Öğeleri" kriterinin temelini bu sprintte sağlamlaştırmak.
+•	Sprint 3 — Cilalama ve Teslim (Polish & Delivery): UI/UX iyileştirme, hataların giderilmesi, kullanıcı testi, video ve son teslim dokümantasyonu. Amaç: "Ürün bütünlüğü" ve "Fonksiyonel yeterlilik" kriterlerini maksimize etmek.
+
+
 ---
 
 # 🚀 Sprint 1
@@ -113,7 +106,6 @@ Sprint sonunda;
 
 - Temel kullanıcı akışı oluşturulmuş,
 - Arayüz tasarımları hazırlanmış,
-- Bubble altyapısı kurulmuş,
 - Kullanıcının vazgeçiş kaydı oluşturabileceği form geliştirilmiş,
 - n8n veri akışı kurulmuş,
 - Tasarruf Cüzdanı çalışır duruma getirilmiş olacaktır.
