@@ -125,8 +125,8 @@ Sprint sonunda;
 ### Daily Scrum - WhatsApp Yazışmaları
 
 - Daily Scrum toplantılarının Slack üzerinden yapılması kararlaştırılmıştır. Yazışmalar ise WhatsApp ve Slack üzerinden yapılmıştır.
-
-<img width="200" src="images/meet.PNG"> <img width="200" src="images/EKLENECEK.png">
+[Sprint 1 Daily Scrum](https://github.com/KaanKerimGodek/YZTA_Bootcamp2026_Grup1/tree/main/Sprint1_Daily_Scrum)
+<img width="200" src="images/meet.PNG"> 
 
 ---
 
@@ -139,9 +139,9 @@ Sprint sonunda;
 ### Ürün Durumu: 
 - **Ekran Görüntüleri**: Uygulamanın hem mobil hem de web üzerinden kullanılabilmesi istenmiş ve ikisi için ayrı ayrı tasarımlar yapılmıştır. 
 
-| Ana Sayfa | Vazgeçiş Ekle | İstatistikler |
-|-----------|---------------|---------------|
-| <img width="200" src="images/anasayfa.png"> | <img width="200" src="images/vazgecisekle.png"> | <img width="200" src="images/istatistikler.png"> |
+| Ana Sayfa(Mobil) | Vazgeçiş Ekle(Mobil) | İstatistikler(Mobil) | Profil(Mobil) |
+|------------------|----------------------|----------------------|---------------|
+| <img width="200" src="images/anasayfa.png"> | <img width="200" src="images/vazgecisekle.png"> | <img width="200" src="images/istatistikler.png"> |<img width="200" src="images/profil.png"> |
 
 ---
 

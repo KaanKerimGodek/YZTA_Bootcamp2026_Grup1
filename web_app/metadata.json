@@ -1,0 +1,6 @@
+{
+  "name": "Vazgeçtim",
+  "description": "Kullanıcıların satın almaktan vazgeçtiği anları kaydederek tasarruf bilincini artıran yapay zeka destekli web uygulaması.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
