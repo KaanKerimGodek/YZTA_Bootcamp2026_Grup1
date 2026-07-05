@@ -145,7 +145,7 @@ Sprint sonunda;
 
 | Ana Sayfa(Web) | Vazgeçiş Ekle(Web) | İstatistikler(Web) |
 |----------------|--------------------|--------------------|
-| <img width="200" src="images/web-anasayfa1.png"> | <img width="200" src="images/web-ekleme.png"> | <img width="200" src="images/web-istatistik1.png"> <img width="200" src="images/web-istatistik2.png">|
+| <img width="200" src="images/web-anasayfa1.png"> | <img width="200" src="images/web-ekleme.png"> | <img width="200" src="images/web-istatistik1.png"> |
 
 ---
 
