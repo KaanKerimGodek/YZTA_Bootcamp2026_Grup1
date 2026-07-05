@@ -4,13 +4,14 @@ import 'package:go_router/go_router.dart';
 
 import '../features/add_transaction/add_transaction_sheet.dart';
 import '../features/home/home_screen.dart';
+import '../features/insights/insights_screen.dart';
 import '../features/profile/profile_screen.dart';
 import '../features/stats/stats_screen.dart';
 import '../shared/layouts/main_scaffold.dart';
 
 /// Uygulamanın tek router sağlayıcısı.
 ///
-/// StatefulShellRoute ile 3 ana sekme (Ana Sayfa, İstatistik, Profil) ayrı
+/// StatefulShellRoute ile 4 ana sekme (Ana Sayfa, İstatistik, İçgörüler, Profil) ayrı
 /// navigator'lara sahiptir; her sekme kendi yığınını korur. Vazgeçiş Ekle
 /// ekranı modal olarak tüm router üzerine biner.
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -37,6 +38,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 name: 'stats',
                 path: '/stats',
                 builder: (context, state) => const StatsScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                name: 'insights',
+                path: '/insights',
+                builder: (context, state) => const InsightsScreen(),
               ),
             ],
           ),

@@ -10,6 +10,7 @@ import '../../core/utils/responsive.dart';
 import '../../data/models/skipped_item.dart';
 import '../../data/providers/savings_providers.dart';
 import '../../data/services/api_client.dart';
+import '../../shared/widgets/activity_tile.dart';
 import '../../shared/widgets/category_icon.dart';
 import '../../shared/widgets/empty_state.dart';
 import '../../shared/widgets/section_header.dart';
@@ -98,6 +99,30 @@ class StatsScreen extends ConsumerWidget {
                       child: Padding(
                         padding: Responsive.screenHorizontal(context),
                         child: _WeeklyBars(items: items),
+                      ),
+                    ),
+                    const SliverToBoxAdapter(
+                      child: SizedBox(height: AppSpacing.lg),
+                    ),
+                    // Geçmiş Harcamalar
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: Responsive.screenHorizontal(context),
+                        child: const SectionHeader(title: 'Geçmiş Harcamalar'),
+                      ),
+                    ),
+                    const SliverToBoxAdapter(
+                      child: SizedBox(height: AppSpacing.sm),
+                    ),
+                    SliverList.separated(
+                      itemCount: items.length,
+                      separatorBuilder: (_, __) =>
+                          const SizedBox(height: AppSpacing.xs),
+                      itemBuilder: (context, i) => Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.sm,
+                        ),
+                        child: ActivityTile(item: items[i]),
                       ),
                     ),
                     const SliverToBoxAdapter(

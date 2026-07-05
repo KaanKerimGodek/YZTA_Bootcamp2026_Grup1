@@ -366,14 +366,18 @@ class _SettingsGroup extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        children: [
-          for (int i = 0; i < items.length; i++) ...[
-            items[i],
-            if (i < items.length - 1)
-              const Divider(height: 1, indent: 64),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(AppShapes.xl),
+        child: Column(
+          children: [
+            for (int i = 0; i < items.length; i++) ...[
+              items[i],
+              if (i < items.length - 1)
+                const Divider(height: 1, indent: 64),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

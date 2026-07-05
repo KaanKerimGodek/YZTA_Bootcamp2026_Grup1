@@ -4,7 +4,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_shapes.dart';
 import '../../core/theme/app_spacing.dart';
 
-/// Alt navigasyon — Ana Sayfa · İstatistik · [FAB] · Profil.
+/// Alt navigasyon — Ana Sayfa · İstatistik · [FAB] · İçgörüler · Profil.
 ///
 /// DESIGN.md → Floating Action Button (FAB):
 /// - Bottom nav'ın ortasında, negatif margin ile yukarı taşmış
@@ -18,7 +18,7 @@ class VazgectimBottomNav extends StatelessWidget {
     required this.onFab,
   });
 
-  /// 0 = Ana Sayfa, 1 = İstatistik, 2 = Profil.
+  /// 0 = Ana Sayfa, 1 = İstatistik, 2 = İçgörüler, 3 = Profil.
   /// (FAB'a tıklamak [onFab] çağırır, index dışı.)
   final int currentIndex;
   final ValueChanged<int> onTap;
@@ -27,6 +27,7 @@ class VazgectimBottomNav extends StatelessWidget {
   static const _items = [
     _NavItem(icon: Icons.home_outlined, activeIcon: Icons.home_rounded, label: 'Ana Sayfa'),
     _NavItem(icon: Icons.bar_chart_outlined, activeIcon: Icons.bar_chart_rounded, label: 'İstatistik'),
+    _NavItem(icon: Icons.auto_awesome_outlined, activeIcon: Icons.auto_awesome_rounded, label: 'İçgörüler'),
     _NavItem(icon: Icons.person_outline_rounded, activeIcon: Icons.person_rounded, label: 'Profil'),
   ];
 
@@ -63,7 +64,6 @@ class VazgectimBottomNav extends StatelessWidget {
                   vertical: AppSpacing.xs + 2,
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Expanded(
                       child: _buildTab(0, _items[0]),
@@ -76,7 +76,9 @@ class VazgectimBottomNav extends StatelessWidget {
                     Expanded(
                       child: _buildTab(2, _items[2]),
                     ),
-                    const SizedBox(width: 0),
+                    Expanded(
+                      child: _buildTab(3, _items[3]),
+                    ),
                   ],
                 ),
               ),
@@ -84,9 +86,9 @@ class VazgectimBottomNav extends StatelessWidget {
           ),
           // FAB — ortada, yukarı taşmış
           Positioned(
-            top: -8,
+            top: 0,
             child: Transform.translate(
-              offset: const Offset(0, -16),
+              offset: const Offset(0, -24),
               child: _Fab(onPressed: onFab),
             ),
           ),

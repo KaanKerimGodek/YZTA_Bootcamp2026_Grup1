@@ -45,6 +45,12 @@ class Formatting {
   /// `14:30` saat formatı.
   static String time(DateTime value) => _timeFmt.format(value);
 
+  /// `0.40` → `%40`  — yüzde gösterimi.
+  static String percent(double value) {
+    final pct = (value * 100).round().abs();
+    return '%$pct';
+  }
+
   /// "Bugün", "Dün" veya kısa tarih — aktivite listesinde kullanılır.
   static String relativeDay(DateTime value) {
     final now = DateTime.now();
