@@ -94,6 +94,7 @@ Proje toplam **3 Sprint** olarak planlanmıştır.
 | Sprint 3 | Son Rötuşlar ve Teslim | 20 Temmuz – 2 Ağustos | 9 |
 
 Toplam planlanan görev sayısı **27**'dir.
+[Backlog_Board](https://github.com/KaanKerimGodek/YZTA_Bootcamp2026_Grup1/blob/main/images/backlog.PNG)
 
 Backlog Dağıtım Mantığı
 Görevler şu mantıkla 3 sprint'e bölündü:

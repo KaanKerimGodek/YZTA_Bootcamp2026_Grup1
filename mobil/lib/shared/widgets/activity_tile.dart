@@ -49,20 +49,28 @@ class ActivityTile extends StatelessWidget {
                   const SizedBox(height: 2),
                   Row(
                     children: [
-                      Text(
-                        item.aiCategory,
-                        style: AppTypography.labelSubtext.copyWith(
-                          color: AppColors.textSecondary,
+                      Flexible(
+                        child: Text(
+                          item.aiCategory,
+                          style: AppTypography.labelSubtext.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const Text(
+                      Text(
                         ' • ',
                         style: TextStyle(color: AppColors.textSecondary),
                       ),
-                      Text(
-                        Formatting.relativeDay(item.createdAt),
-                        style: AppTypography.labelSubtext.copyWith(
-                          color: AppColors.textSecondary,
+                      Flexible(
+                        child: Text(
+                          Formatting.relativeDay(item.createdAt),
+                          style: AppTypography.labelSubtext.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],

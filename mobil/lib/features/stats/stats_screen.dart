@@ -13,12 +13,15 @@ import '../../data/services/api_client.dart';
 import '../../shared/widgets/activity_tile.dart';
 import '../../shared/widgets/category_icon.dart';
 import '../../shared/widgets/empty_state.dart';
+import '../../shared/widgets/enhanced_summary_cards.dart';
 import '../../shared/widgets/section_header.dart';
 
-/// İstatistik ekranı — kategori bazlı breakdown + dönem özeti.
+/// İstatistik ekranı — geliştirilmiş özet kartlar + kategori breakdown + dönem özeti.
 ///
-/// Tüm hesaplama frontend'de mevcut veriden türetilir; backend'den ayrı
-/// endpoint gerekmez (Steering batch job'ları ileride ekleyebilir).
+/// Gelişmiş özet kartları:
+/// - Toplam kart: En yüksek 3 vazgeçiş
+/// - Vazgeçiş kartı: En çok vazgeçilen 3 kategori + adet
+/// - Ortalama kart: Son 7 gün dikey mini Bar Chart
 class StatsScreen extends ConsumerWidget {
   const StatsScreen({super.key});
 
@@ -56,11 +59,11 @@ class StatsScreen extends ConsumerWidget {
                     const SliverToBoxAdapter(
                       child: SizedBox(height: AppSpacing.md),
                     ),
-                    // Özet kartları
+                    // Geliştirilmiş özet kartları
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: Responsive.screenHorizontal(context),
-                        child: _SummaryRow(items: items),
+                        child: _EnhancedSummaryRow(items: items),
                       ),
                     ),
                     const SliverToBoxAdapter(
@@ -85,7 +88,7 @@ class StatsScreen extends ConsumerWidget {
                     const SliverToBoxAdapter(
                       child: SizedBox(height: AppSpacing.lg),
                     ),
-                    // Haftalık aktivite
+                    // Haftalık aktivite (güncel grafik)
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: Responsive.screenHorizontal(context),
@@ -142,103 +145,21 @@ class StatsScreen extends ConsumerWidget {
   }
 }
 
-class _SummaryRow extends StatelessWidget {
-  const _SummaryRow({required this.items});
+/// Geliştirilmiş özet kartları: 3 kart alt alta (dikey düzen).
+class _EnhancedSummaryRow extends StatelessWidget {
+  const _EnhancedSummaryRow({required this.items});
   final List<SkippedItem> items;
 
   @override
   Widget build(BuildContext context) {
-    final total = items.fold<double>(0, (a, e) => a + e.price);
-    final count = items.length;
-    final avg = count > 0 ? total / count : 0.0;
-
-    return Row(
+    return Column(
       children: [
-        Expanded(child: _StatCard(
-          label: 'Toplam',
-          value: Formatting.currency(total, decimal: false),
-          icon: Icons.savings_outlined,
-          accent: AppColors.primary,
-        )),
-        const SizedBox(width: AppSpacing.sm),
-        Expanded(child: _StatCard(
-          label: 'Vazgeçiş',
-          value: '$count',
-          icon: Icons.check_circle_outline_rounded,
-          accent: AppColors.successEmerald,
-        )),
-        const SizedBox(width: AppSpacing.sm),
-        Expanded(child: _StatCard(
-          label: 'Ortalama',
-          value: Formatting.currency(avg, decimal: false),
-          icon: Icons.trending_up_rounded,
-          accent: AppColors.tertiary,
-        )),
+        EnhancedSummaryCard(config: TotalSummaryConfig(items).build()),
+        const SizedBox(height: AppSpacing.md),
+        EnhancedSummaryCard(config: CountSummaryConfig(items).build()),
+        const SizedBox(height: AppSpacing.md),
+        EnhancedSummaryCard(config: AverageSummaryConfig(items).build()),
       ],
-    );
-  }
-}
-
-class _StatCard extends StatelessWidget {
-  const _StatCard({
-    required this.label,
-    required this.value,
-    required this.icon,
-    required this.accent,
-  });
-  final String label;
-  final String value;
-  final IconData icon;
-  final Color accent;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.sm),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(AppShapes.lg),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x10000000),
-            blurRadius: 12,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 32,
-            height: 32,
-            decoration: BoxDecoration(
-              color: accent.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(AppShapes.md),
-            ),
-            child: Icon(icon, color: accent, size: 18),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: Alignment.centerLeft,
-            child: Text(
-              value,
-              style: AppTypography.bodyBold.copyWith(
-                fontSize: 18,
-                color: AppColors.textPrimary,
-              ),
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: AppTypography.labelSubtext.copyWith(
-              color: AppColors.textSecondary,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -400,7 +321,12 @@ class _WeeklyBars extends StatelessWidget {
                         alignment: Alignment.bottomCenter,
                         child: Container(
                           decoration: BoxDecoration(
-                            gradient: primaryGradient(),
+                            gradient: LinearGradient(
+                              colors: [
+                                AppColors.primary.withOpacity(0.7),
+                                AppColors.successEmerald.withOpacity(0.7),
+                              ],
+                            ),
                             borderRadius: BorderRadius.circular(AppShapes.sm),
                           ),
                         ),
