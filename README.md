@@ -208,7 +208,7 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 
 | Ana Sayfa(Web) | İçgörü(Web) | İstatistikler(Web) |İstatistikler(Web) |
 |----------------|--------------------|--------------------|-------------------|
-| <img width="200" src="images/web-anaayfa1.png"> | <img width="200" src="images/web-eklme.png"> | <img width="200" src="images/web-istatstik1.png"> |<img width="200" src="images/web-istatisik2.png"> |
+|<img width="200" src="images/web-anasayfa2.png"> | <img width="200" src="images/web-içgörü1.png"> | <img width="200" src="images/içgörü2.png"> | <img width="200" src="images/içgörü3.png"> |
 
 ---
 
@@ -226,9 +226,9 @@ Tamamlanan:
 - Veri tutarlılığı ve hata kontrolü yapıldı.
 
 Bir sonraki sprinte devreden:
-- Belirli tasarruf miktarına ulaşıldığında otomatik bildirim/mesaj gönderimi (WhatsApp/Telegram/e-posta).
+- Belirli tasarruf miktarına ulaşıldığında otomatik bildirim/mesaj gönderimi (WhatsApp/Telegram/e-posta), Web platformunun altyapı servisleri (API ve n8n) ile olan uçtan uca veri entegrasyonunun eksiklerinin tamamlanması.
 
-Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı, devreden görevler Sprint 3'ünn ilk günlerinde kapatılacak.
+Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı, devreden görevler Sprint 3'ün ilk günlerinde kapatılacak.
 
 
 
