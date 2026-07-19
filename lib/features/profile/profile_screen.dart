@@ -7,6 +7,7 @@ import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
 import '../../core/utils/formatting.dart';
 import '../../core/utils/responsive.dart';
+import '../../data/providers/auth_providers.dart';
 import '../../data/providers/savings_providers.dart';
 import '../../data/services/api_client.dart';
 
@@ -18,6 +19,7 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userAsync = ref.watch(userProvider);
     final itemsAsync = ref.watch(recentItemsProvider);
+    final session = ref.watch(sessionProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -53,8 +55,10 @@ class ProfileScreen extends ConsumerWidget {
                 padding: Responsive.screenHorizontal(context),
                 child: userAsync.when(
                   data: (user) => _ProfileCard(
-                    name: user.displayName ?? 'Vazgeçtim Üyesi',
-                    email: user.email,
+                    name: session?.displayName ??
+                        user.displayName ??
+                        'Vazgeçtim Üyesi',
+                    email: session?.email ?? user.email ?? '',
                     memberSince: user.createdAt,
                   ),
                   loading: () => const _ProfileCardPlaceholder(),
@@ -135,6 +139,15 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
+
+            // Çıkış Yap
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: Responsive.screenHorizontal(context),
+                child: _LogoutButton(ref: ref),
               ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 120)),
@@ -343,6 +356,121 @@ class _SectionTitle extends StatelessWidget {
         color: AppColors.textSecondary,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.8,
+      ),
+    );
+  }
+}
+
+/// Çıkış Yap butonu — tıklanınca onay dialogu gösterir.
+///
+/// Onaylanırsa [sessionProvider.notifier.signOut] çağrılır; router redirect'i
+/// otomatik olarak `/welcome`'a yönlendirir.
+class _LogoutButton extends StatelessWidget {
+  const _LogoutButton({required this.ref});
+  final WidgetRef ref;
+
+  Future<void> _confirm(BuildContext context) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppShapes.xl),
+        ),
+        title: Text(
+          'Çıkış Yap',
+          style: AppTypography.headlineSection.copyWith(
+            color: AppColors.textPrimary,
+          ),
+        ),
+        content: Text(
+          'Hesabından çıkış yapmak istediğine emin misin?',
+          style: AppTypography.bodyMain.copyWith(
+            color: AppColors.textSecondary,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(
+              'Vazgeç',
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(
+              'Çıkış Yap',
+              style: TextStyle(
+                color: AppColors.error,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (result == true) {
+      await ref.read(sessionProvider.notifier).signOut();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(AppShapes.xl),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x10000000),
+            blurRadius: 12,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(AppShapes.xl),
+          onTap: () => _confirm(context),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.sm + 2,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: AppColors.error.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(AppShapes.md),
+                  ),
+                  child: const Icon(
+                    Icons.logout_rounded,
+                    color: AppColors.error,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: Text(
+                    'Çıkış Yap',
+                    style: AppTypography.bodyMain.copyWith(
+                      color: AppColors.error,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const Icon(
+                  Icons.chevron_right_rounded,
+                  color: AppColors.textSecondary,
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

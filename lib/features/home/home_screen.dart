@@ -7,14 +7,19 @@ import '../../core/theme/app_shapes.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
 import '../../core/utils/responsive.dart';
+import '../../data/models/auth_session.dart';
+import '../../data/providers/auth_providers.dart';
 import '../../data/providers/savings_providers.dart';
 import '../../shared/widgets/activity_tile.dart';
 import '../../shared/widgets/empty_state.dart';
+import '../../shared/widgets/goal_status_card.dart';
 import '../../shared/widgets/hero_wallet_card.dart';
 import '../../shared/widgets/insight_card.dart';
+import '../../shared/widgets/motivation_quote_card.dart';
 import '../../shared/widgets/section_header.dart';
+import '../../shared/widgets/weekly_achievement_badge.dart';
 
-/// Ana Sayfa — Hero Wallet + AI Insight Carousel + Recent Activity.
+/// Ana Sayfa — Hero Wallet + Hedef Durumu + AI Insight Carousel + Günün Motivasyonu + Recent Activity.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -23,6 +28,7 @@ class HomeScreen extends ConsumerWidget {
     final userAsync = ref.watch(userProvider);
     final itemsAsync = ref.watch(recentItemsProvider);
     final insightsAsync = ref.watch(insightsProvider);
+    final session = ref.watch(sessionProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -40,7 +46,7 @@ class HomeScreen extends ConsumerWidget {
             slivers: [
               const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.sm)),
               // Header
-              SliverToBoxAdapter(child: _Header(userAsync: userAsync)),
+              SliverToBoxAdapter(child: _Header(userAsync: userAsync, session: session)),
               const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
               // Hero Wallet Card
               SliverToBoxAdapter(
@@ -50,6 +56,35 @@ class HomeScreen extends ConsumerWidget {
                     data: (user) => HeroWalletCard(totalSaved: user.totalSaved),
                     loading: () => _HeroSkeleton(),
                     error: (e, _) => _HeroSkeleton(),
+                  ),
+                ),
+              ),
+              // Weekly Achievement Badge (Hero Card altı)
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: Responsive.screenHorizontal(context),
+                  child: itemsAsync.when(
+                    data: (items) => WeeklyAchievementBadge(items: items),
+                    loading: () => const WeeklyAchievementBadgeSkeleton(),
+                    error: (_, __) => const SizedBox.shrink(),
+                  ),
+                ),
+              ),
+              const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
+              // Hedef Durumu Kartı
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: Responsive.screenHorizontal(context),
+                  child: userAsync.when(
+                    data: (user) => GoalStatusCard(
+                      goalName: 'İtalya Tatili',
+                      currentAmount: user.totalSaved * 0.31, // Demo: %31 ilerleme
+                      targetAmount: 10000,
+                      icon: Icons.flag_rounded,
+                      iconColor: AppColors.successEmerald,
+                    ),
+                    loading: () => const GoalStatusCardSkeleton(),
+                    error: (_, __) => const GoalStatusCardSkeleton(),
                   ),
                 ),
               ),
@@ -64,6 +99,17 @@ class HomeScreen extends ConsumerWidget {
               const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.sm)),
               SliverToBoxAdapter(
                 child: _InsightCarousel(insightsAsync: insightsAsync),
+              ),
+              const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
+              // Günün Motivasyonu
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: Responsive.screenHorizontal(context),
+                  child: const MotivationQuoteCard(
+                    quote: '', // Boş bırakılırsa günün sözü otomatik seçilir
+                    author: '',
+                  ),
+                ),
               ),
               const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
               // Recent Activity
@@ -95,7 +141,7 @@ class HomeScreen extends ConsumerWidget {
                             const SizedBox(height: AppSpacing.xs),
                         itemBuilder: (context, i) => Padding(
                           padding:
-                              EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                              const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
                           child: ActivityTile(item: items[i]),
                         ),
                       ),
@@ -126,12 +172,16 @@ class HomeScreen extends ConsumerWidget {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({required this.userAsync});
+  const _Header({required this.userAsync, this.session});
   final AsyncValue userAsync;
+  final AuthSession? session;
 
   @override
   Widget build(BuildContext context) {
-    final name = userAsync.valueOrNull?.displayName;
+    // Öncelik: auth session'daki isim → userProvider'daki isim → varsayılan
+    final name = session?.displayName ??
+        userAsync.valueOrNull?.displayName ??
+        'Vazgeçtim';
     final hour = DateTime.now().hour;
     final greeting = hour < 12
         ? 'Günaydın'
@@ -154,7 +204,7 @@ class _Header extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  name != null ? name : 'Vazgeçtim',
+                  name,
                   style: AppTypography.headlineSection.copyWith(
                     fontSize: 22,
                     color: AppColors.textPrimary,
