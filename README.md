@@ -204,11 +204,11 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 
 | Hedef(Mobil) | İçgörü(Mobil) | Tasarruf Eşiği(Mobil) | Tetikleyici Anlar(Mobil) |
 |------------------|----------------------|----------------------|---------------|
-| <img src="images/Hedef.jpeg" style="width:200px; height:300px; object-fit:cover;"> | <img src="images/icgoruler.png" style="width:200px; height:300px; object-fit:cover;"> | <img src="images/hedef2.PNG" style="width:200px; height:300px; object-fit:cover;"> | <img src="images/An.PNG" style="width:200px; height:300px; object-fit:cover;"> |
+| <img src="images/Hedef.jpeg" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/icgoruler.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/hedef2.PNG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/An.PNG" style="width:250px; height:300px; object-fit:cover;"> |
 
-| Ana Sayfa(Web) | İçgörü(Web) | İstatistikler(Web) |İstatistikler(Web) |
+| Ana Sayfa(Web) | İçgörü(Web) | Tasarruf Eşiği(Web) | Tetikleyici Anlar(Web) |
 |----------------|--------------------|--------------------|-------------------|
-|<img width="200" src="images/web-anasayfa2.png"> | <img width="200" src="images/web-içgörü1.png"> | <img width="200" src="images/içgörü2.png"> | <img width="200" src="images/içgörü3.png"> |
+|<img src="images/web_anasayfa2.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="images/web_icgoru1.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="images/web_icgoru3.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="images/web_icgoru2.png" style="width:250px; height:250px; object-fit:cover;"> |
 
 ---
 
