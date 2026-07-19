@@ -1,14 +1,27 @@
-import React from 'react';
-import { Home, BarChart2, Plus, Sparkles, User } from 'lucide-react';
+import React, { useState } from 'react';
+import { Home, BarChart2, Plus, Sparkles, User, Bell } from 'lucide-react';
+import { MOCK_NOTIFICATIONS } from '../mockInsights';
 
 interface LayoutProps {
   children: React.ReactNode;
   activeTab: 'home' | 'stats' | 'insights' | 'profile';
   onTabChange: (tab: 'home' | 'stats' | 'insights' | 'profile') => void;
   onAddClick: () => void;
+  userName: string;
 }
 
-export function Layout({ children, activeTab, onTabChange, onAddClick }: LayoutProps) {
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 6) return 'İyi geceler';
+  if (hour < 12) return 'Günaydın';
+  if (hour < 18) return 'İyi günler';
+  return 'İyi akşamlar';
+}
+
+export function Layout({ children, activeTab, onTabChange, onAddClick, userName }: LayoutProps) {
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const unreadCount = MOCK_NOTIFICATIONS.filter((n) => !n.read).length;
+
   return (
     <div className="min-h-screen bg-slate-50 font-sans pb-20 md:pb-0 flex flex-col relative z-0">
       {/* Mobile Header */}
@@ -18,13 +31,19 @@ export function Layout({ children, activeTab, onTabChange, onAddClick }: LayoutP
             V
           </div>
           <div>
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider leading-none mb-1">Hoş Geldin</p>
-            <h1 className="text-sm font-bold text-slate-700">Kullanıcı</h1>
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider leading-none mb-1">{getGreeting()} 👋</p>
+            <h1 className="text-sm font-bold text-slate-700">{userName}</h1>
           </div>
         </div>
-        <button className="w-10 h-10 rounded-full bg-slate-200 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden">
-           <div className="w-full h-full bg-slate-400"></div>
-        </button>
+        <div className="flex items-center gap-2">
+          <NotificationBell isOpen={isNotifOpen} onToggle={() => setIsNotifOpen((v) => !v)} unreadCount={unreadCount} />
+          <button
+            onClick={() => onTabChange('profile')}
+            className="w-10 h-10 rounded-full bg-slate-200 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden"
+          >
+             <div className="w-full h-full bg-slate-400"></div>
+          </button>
+        </div>
       </header>
 
       {/* Desktop Top Navigation */}
@@ -40,7 +59,7 @@ export function Layout({ children, activeTab, onTabChange, onAddClick }: LayoutP
           <div className="flex gap-6 text-sm font-medium">
             <button onClick={() => onTabChange('home')} className={`transition-colors ${activeTab === 'home' ? 'text-emerald-600 font-bold' : 'text-slate-600 hover:text-emerald-600'}`}>Anasayfa</button>
             <button onClick={() => onTabChange('stats')} className={`transition-colors ${activeTab === 'stats' ? 'text-emerald-600 font-bold' : 'text-slate-600 hover:text-emerald-600'}`}>İstatistik</button>
-            <button onClick={() => onTabChange('insights')} className={`transition-colors ${activeTab === 'insights' ? 'text-emerald-600 font-bold' : 'text-slate-600 hover:text-emerald-600'}`}>Yapay Zeka</button>
+            <button onClick={() => onTabChange('insights')} className={`transition-colors ${activeTab === 'insights' ? 'text-emerald-600 font-bold' : 'text-slate-600 hover:text-emerald-600'}`}>İçgörü</button>
           </div>
           
           <div className="h-6 w-px bg-slate-200"></div>
@@ -53,10 +72,12 @@ export function Layout({ children, activeTab, onTabChange, onAddClick }: LayoutP
             <span>Vazgeçiş Ekle</span>
           </button>
 
+          <NotificationBell isOpen={isNotifOpen} onToggle={() => setIsNotifOpen((v) => !v)} unreadCount={unreadCount} />
+
           <div className="flex items-center gap-3 border-l border-slate-200 pl-6 cursor-pointer" onClick={() => onTabChange('profile')}>
             <div className="text-right">
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider leading-none mb-1">Hoş Geldin</p>
-              <p className="text-sm font-bold text-slate-700">Kullanıcı</p>
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider leading-none mb-1">{getGreeting()}</p>
+              <p className="text-sm font-bold text-slate-700">{userName}</p>
             </div>
             <div className="w-10 h-10 rounded-full bg-slate-200 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden">
               <div className="w-full h-full bg-slate-400"></div>
@@ -114,6 +135,47 @@ export function Layout({ children, activeTab, onTabChange, onAddClick }: LayoutP
           <span className="text-[10px] font-medium">Profil</span>
         </button>
       </nav>
+    </div>
+  );
+}
+
+interface NotificationBellProps {
+  isOpen: boolean;
+  onToggle: () => void;
+  unreadCount: number;
+}
+
+function NotificationBell({ isOpen, onToggle, unreadCount }: NotificationBellProps) {
+  return (
+    <div className="relative">
+      <button
+        onClick={onToggle}
+        className="relative w-10 h-10 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors"
+        aria-label="Bildirimler"
+      >
+        <Bell size={20} />
+        {unreadCount > 0 && (
+          <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white" />
+        )}
+      </button>
+
+      {isOpen && (
+        <>
+          <div className="fixed inset-0 z-[105]" onClick={onToggle} />
+          <div className="absolute right-0 mt-2 w-80 max-w-[90vw] bg-white rounded-2xl border border-slate-200 shadow-xl z-[110] overflow-hidden">
+            <div className="px-4 py-3 border-b border-slate-100 font-bold text-slate-700 text-sm">Bildirimler</div>
+            <div className="max-h-80 overflow-y-auto custom-scrollbar">
+              {MOCK_NOTIFICATIONS.map((n) => (
+                <div key={n.id} className={`px-4 py-3 border-b border-slate-50 last:border-0 ${!n.read ? 'bg-emerald-50/40' : ''}`}>
+                  <p className="text-sm font-semibold text-slate-700">{n.title}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">{n.message}</p>
+                  <p className="text-[11px] text-slate-400 mt-1">{n.time}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
