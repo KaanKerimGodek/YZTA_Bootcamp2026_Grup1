@@ -1,6 +1,9 @@
-# <div align="center">
+<div align="center">
 
-# 💡 Vazgeçtim
+![Vazgeçtim Logo](images/logo.jpeg)
+
+</div>
+
 
 ### *"Harcamadığın her kuruş, geleceğine yapılan bir yatırımdır."*
 
@@ -10,7 +13,6 @@
 
 ![Durum](https://img.shields.io/badge/Durum-Sprint%201-blue)
 ![Bootcamp](https://img.shields.io/badge/Bootcamp-2026-purple)
-![Bubble](https://img.shields.io/badge/Bubble-NoCode-blue)
 ![n8n](https://img.shields.io/badge/n8n-Automation-orange)
 ![Gemini](https://img.shields.io/badge/Gemini-AI-success)
 
@@ -42,6 +44,11 @@ Bireylerin harcama alışkanlıklarını daha bilinçli hale getirmek, vazgeçil
 
 ---
 
+## Takım İsmi
+StackOverthink
+
+---
+
 # 👥 Takım Üyeleri
 
 | Rol | Üye |
@@ -54,6 +61,18 @@ Bireylerin harcama alışkanlıklarını daha bilinçli hale getirmek, vazgeçil
 
 ---
 
+# ✨ Ürün Özellikleri
+
+- 🛒 Sanal Sepet Deneyimi
+- 💰 Tasarruf Cüzdanı
+- 📝 Günlük Vazgeçiş Kaydı
+- 📊 Harcama Alışkanlığı Takibi
+- 🤖 Yapay Zekâ Destekli Davranış Analizi 
+- 📈 Haftalık / Aylık Kişiselleştirilmiş İçgörüler 
+- 🔔 Motivasyon ve Başarı Bildirimleri 
+
+---
+
 # 🎯 Hedef Kitle
 
 - Harcamalarını daha bilinçli yönetmek isteyen genç yetişkinler
@@ -61,31 +80,6 @@ Bireylerin harcama alışkanlıklarını daha bilinçli hale getirmek, vazgeçil
 - Yeni mezunlar
 - Dürtüsel alışveriş alışkanlığına sahip bireyler
 - Kişisel finans farkındalığını artırmak isteyen herkes
-
----
-
-# ✨ Ürün Özellikleri
-
-- 🛒 Sanal Sepet Deneyimi
-- 💰 Tasarruf Cüzdanı
-- 📝 Günlük Vazgeçiş Kaydı
-- 📊 Harcama Alışkanlığı Takibi
-- 🤖 Yapay Zekâ Destekli Davranış Analizi *(Sprint 2)*
-- 📈 Haftalık / Aylık Kişiselleştirilmiş İçgörüler *(Sprint 2)*
-- 🔔 Motivasyon ve Başarı Bildirimleri *(Sprint 2)*
-
----
-
-# 🛠️ Kullanılan Teknolojiler
-
-| Kategori | Teknoloji |
-|-----------|------------|
-| No-Code Platform | Bubble |
-| Otomasyon | n8n |
-| Yapay Zekâ | Gemini API |
-| Veritabanı | Airtable / Google Sheets |
-| Tasarım | Figma |
-| Versiyon Kontrol | GitHub |
 
 ---
 
@@ -100,9 +94,19 @@ Proje toplam **3 Sprint** olarak planlanmıştır.
 | Sprint 3 | Son Rötuşlar ve Teslim | 20 Temmuz – 2 Ağustos | 9 |
 
 Toplam planlanan görev sayısı **27**'dir.
+[Backlog_Board](https://github.com/KaanKerimGodek/YZTA_Bootcamp2026_Grup1/blob/main/images/backlog.PNG)
+
+Backlog Dağıtım Mantığı
+Görevler şu mantıkla 3 sprint'e bölündü:
+
+•	Sprint 1 — Temel (Foundation): AI olmadan da çalışan bir iskelet ürün. Takım kimliği, tasarım, temel veri akışı ve cüzdan mantığı bu sprintte oturtulur. Amaç: Sprint 1 sonunda elle test edilebilir, uçtan uca (baştan sona) çalışan basit bir prototip olması.
+
+•	Sprint 2 — Akıllı Katman (Intelligence): Yapay zeka entegrasyonu bu sprintte gelir: kategori sınıflandırma, davranış analizi, doğal dilde içgörü üretimi. Amaç: Final değerlendirmedeki 35 puanlık "Yapay Zeka Öğeleri" kriterinin temelini bu sprintte sağlamlaştırmak.
+
+•	Sprint 3 — Cilalama ve Teslim (Polish & Delivery): UI/UX iyileştirme, hataların giderilmesi, kullanıcı testi, video ve son teslim dokümantasyonu. Amaç: "Ürün bütünlüğü" ve "Fonksiyonel yeterlilik" kriterlerini maksimize etmek.
+
 
 ---
-
 # 🚀 Sprint 1
 
 ## 🎯 Sprint Amacı
@@ -113,172 +117,61 @@ Sprint sonunda;
 
 - Temel kullanıcı akışı oluşturulmuş,
 - Arayüz tasarımları hazırlanmış,
-- Bubble altyapısı kurulmuş,
 - Kullanıcının vazgeçiş kaydı oluşturabileceği form geliştirilmiş,
 - n8n veri akışı kurulmuş,
 - Tasarruf Cüzdanı çalışır duruma getirilmiş olacaktır.
 
----
 
-## 📌 Sprint Backlog
+  
+### Daily Scrum - WhatsApp Yazışmaları
 
-| No | Görev | Durum |
-|:--:|------------------------------|:--:|
-| 1 | GitHub Repository Kurulumu | ⬜ |
-| 2 | README Dokümantasyonu | ⬜ |
-| 3 | Sprint Board Oluşturulması | ⬜ |
-| 4 | Marka Kimliğinin Belirlenmesi | ⬜ |
-| 5 | Kullanıcı Akışının (User Flow) Hazırlanması | ⬜ |
-| 6 | Wireframe Tasarımlarının Oluşturulması | ⬜ |
-| 7 | Bubble Projesinin Kurulması | ⬜ |
-| 8 | "Vazgeçiş Ekle" Formunun Geliştirilmesi | ⬜ |
-| 9 | Tasarruf Cüzdanı ve n8n Entegrasyonu | ⬜ |
+- Daily Scrum toplantılarının Slack üzerinden yapılması kararlaştırılmıştır. Yazışmalar ise WhatsApp ve Slack üzerinden yapılmıştır.
+[Sprint 1 Daily Scrum](https://github.com/KaanKerimGodek/YZTA_Bootcamp2026_Grup1/tree/main/Sprint1_Daily_Scrum)
+<img width="200" src="images/meet.PNG"> 
 
 ---
 
-# 📝 Sprint Notları
-
-Sprint 1 süresince projenin teknik ve görsel altyapısı oluşturulacaktır.
-
-Bu sprint kapsamında;
-
-- GitHub proje yapısı oluşturulacaktır.
-- Ürün kimliği belirlenecektir.
-- Kullanıcı deneyimi tasarlanacaktır.
-- Wireframe çalışmaları hazırlanacaktır.
-- Bubble platformunda temel uygulama geliştirilecektir.
-- Kullanıcının vazgeçtiği harcamaları ekleyebileceği form hazırlanacaktır.
-- n8n ile otomatik veri akışı kurulacaktır.
-- Tasarruf Cüzdanı oluşturularak toplam tasarruf miktarı gösterilecektir.
+### Sprint 1 board update: 
+- **Sprint Board Screenshot**: Görev takip ve paylaşımlarının Trello üzerinden yapılması kararlaştırılmıştır.  
+ <img width="320" src="images/ilkpano.PNG">  <img width="320" src="images/orta.PNG">  <img width="320" src="images/son.PNG"> 
 
 ---
 
-# 📊 Sprint Board
+### Ürün Durumu: 
+- **Ekran Görüntüleri**: Uygulamanın hem mobil hem de web üzerinden kullanılabilmesi istenmiş ve ikisi için ayrı ayrı tasarımlar yapılmıştır. 
 
-Sprint ilerledikçe GitHub Project Board güncellenecektir.
+| Ana Sayfa(Mobil) | Vazgeçiş Ekle(Mobil) | İstatistikler(Mobil) | Profil(Mobil) |
+|------------------|----------------------|----------------------|---------------|
+| <img width="200" src="images/anasayfa.png"> | <img width="200" src="images/vazgecisekle.png"> | <img width="200" src="images/istatistikler.png"> |<img width="200" src="images/profil.png"> |
 
-## 📝 To Do
-
-> *(Sprint sonunda ekran görüntüsü eklenecektir.)*
-
----
-
-## 🚧 In Progress
-
-> *(Sprint sonunda ekran görüntüsü eklenecektir.)*
+| Ana Sayfa(Web) | Vazgeçiş Ekle(Web) | İstatistikler(Web) |İstatistikler(Web) |
+|----------------|--------------------|--------------------|-------------------|
+| <img width="200" src="images/web-anasayfa1.png"> | <img width="200" src="images/web-ekleme.png"> | <img width="200" src="images/web-istatistik1.png"> |<img width="200" src="images/web-istatistik2.png"> |
 
 ---
 
-## ✅ Done
+  ### Sprint Review:
+Sprint 1'in temel hedefi, yapay zeka entegrasyonu olmadan uçtan uca çalışan bir iskelet prototip ortaya çıkarmaktı.
+Tamamlanan:
+- Takım kimliği ve GitHub repo kurulumu
+- Kullanıcı akışı (user flow) ve wireframe tasarımı
+- Vazgeçiş ekleme formu geliştirildi
+- Tasarruf Cüzdanı temel mantığı kuruldu
+- n8n webhook + Google Sheets veri akışı bağlandı
+- Mobil ve web arayüz tasarımları tamamlandı
 
-> *(Sprint sonunda ekran görüntüsü eklenecektir.)*
+Bir sonraki sprinte devreden:
+- Mobil ve web arayüzlerinin detaylandırılması
 
----
+Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı, devreden görevler Sprint 2'nin ilk günlerinde kapatılacak.
 
-# 📉 Burndown Chart
 
-Sprint sonunda görev ilerleyişini gösteren Burndown Chart bu alana eklenecektir.
 
-> *(Grafik eklenecektir.)*
+  ### Sprint Retrospective:
+- Teknik altyapı sorunsuz kuruldu, n8n ve Google Sheets entegrasyonu başarıyla tamamlandı
+- Sprint hedefinin büyük bölümü zamanında teslim edildi
+- Scrum rollerinin işlevselliği ekip çalışmasına olumlu katkı sağladı
+- Daily Scrum'ların daha düzenli aralıklarla yapılması hedefleniyor
+- Trello üzerindeki görev takibinin daha aktif kullanılması planlanıyor
 
----
 
-# 📝 Daily Scrum
-
-Takım üyeleri sprint boyunca düzenli Daily Scrum toplantıları gerçekleştirecektir.
-
-Toplantı notları ve ekran görüntüleri Sprint sonunda bu bölümde paylaşılacaktır.
-
----
-
-# 📷 Ürün Durumu
-
-Sprint 1 sonunda geliştirilen ekran görüntüleri burada paylaşılacaktır.
-
-### 🏠 Ana Sayfa
-
-*(Ekran görüntüsü eklenecektir.)*
-
----
-
-### ➕ Vazgeçiş Ekle Sayfası
-
-*(Ekran görüntüsü eklenecektir.)*
-
----
-
-### 💰 Tasarruf Cüzdanı
-
-*(Ekran görüntüsü eklenecektir.)*
-
----
-
-# 🎥 Demo
-
-Proje tanıtım videosu Sprint 3 sonunda eklenecektir.
-
----
-
-# 📌 Sprint Review
-
-## Planlanan Görev Sayısı
-
-**9**
-
-## Tamamlanan Görevler
-
-*Sprint sonunda güncellenecektir.*
-
-## Tamamlanamayan Görevler
-
-*Sprint sonunda güncellenecektir.*
-
-## Ürün Demo Çıktıları
-
-*Sprint sonunda eklenecektir.*
-
-## Değerlendirme Notları
-
-*Sprint sonunda güncellenecektir.*
-
----
-
-# 🔄 Sprint Retrospective
-
-## ✅ İyi Giden Noktalar
-
-*Sprint sonunda doldurulacaktır.*
-
----
-
-## ⚠️ Geliştirilmesi Gereken Noktalar
-
-*Sprint sonunda doldurulacaktır.*
-
----
-
-## 🚀 Bir Sonraki Sprint İçin Aksiyonlar
-
-*Sprint sonunda doldurulacaktır.*
-
----
-
-# 📅 Sonraki Sprint
-
-Sprint 2 kapsamında aşağıdaki geliştirmelerin yapılması planlanmaktadır:
-
-- 🤖 Gemini API entegrasyonu
-- 🏷️ Otomatik kategori belirleme
-- 📊 Yapay zekâ destekli davranış analizi
-- 📈 Haftalık kişiselleştirilmiş içgörü raporları
-- 🔔 Otomatik bildirim sistemi
-
----
-
-<div align="center">
-
-### ❤️ No-Code / Low-Code Bootcamp 2026 kapsamında geliştirilmektedir.
-
-**Vazgeçtim © 2026**
-
-</div>
