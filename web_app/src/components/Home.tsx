@@ -1,11 +1,13 @@
 import React from 'react';
-import { PiggyBank, Sparkles, Coffee, ExternalLink, Plus, Shirt, Utensils, Gamepad2, Car, Laptop, Heart } from 'lucide-react';
+import { PiggyBank, Sparkles, Coffee, Plus, Shirt, Utensils, Gamepad2, Car, Laptop, Heart, Clock, Tag } from 'lucide-react';
 import { Entry, InsightData } from '../types';
+import { MOCK_INSIGHT_REPORTS, MOCK_STREAK_DAYS } from '../mockInsights';
 
 interface HomeProps {
   entries: Entry[];
   insightData: InsightData | null;
   onAddClick?: () => void;
+  onNavigateInsights?: () => void;
 }
 
 export const getCategoryStyle = (category: string) => {
@@ -21,13 +23,14 @@ export const getCategoryStyle = (category: string) => {
   }
 };
 
-export function Home({ entries, insightData, onAddClick }: HomeProps) {
+export function Home({ entries, insightData, onAddClick, onNavigateInsights }: HomeProps) {
   const formatMoney = (amount: number) => {
     return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(amount);
   };
 
   // Calculate total locally so it doesn't wait for insights API to show up
   const totalSavings = entries.reduce((sum, e) => sum + e.amount, 0);
+  const weeklyReport = MOCK_INSIGHT_REPORTS.weekly;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-12 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 items-start">
@@ -51,15 +54,42 @@ export function Home({ entries, insightData, onAddClick }: HomeProps) {
           <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl z-0"></div>
         </div>
 
-        {/* Desktop Add Button - Hidden on mobile where FAB exists */}
-        <button 
-          onClick={onAddClick}
-          className="hidden md:flex w-full py-6 bg-white border-2 border-emerald-500 rounded-2xl flex-col items-center justify-center gap-2 hover:bg-emerald-50 transition-colors group"
-        >
-          <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl font-bold group-hover:scale-110 transition-transform">+</div>
-          <span className="font-bold text-emerald-700">Yeni Vazgeçiş Ekle</span>
-          <span className="text-xs text-slate-400">Neleri almaktan vazgeçtin?</span>
-        </button>
+        {/* Vazgeçiş Serisi (Streak) */}
+        {MOCK_STREAK_DAYS > 0 && (
+          <div className="bg-orange-50 border border-orange-200 rounded-full px-4 py-2.5 text-center text-sm font-semibold text-orange-700">
+            🔥🔥 {MOCK_STREAK_DAYS} gün üst üste vazgeçiş serisi!
+          </div>
+        )}
+
+        {/* Haftalık İçgörü Kartı */}
+        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-amber-500 font-bold flex items-center gap-1">
+              <Sparkles size={16} /> AI
+            </span>
+            <h4 className="font-semibold text-slate-800">Haftalık İçgörü</h4>
+          </div>
+          <p className="text-sm text-slate-500 leading-relaxed italic mb-4">
+            "{weeklyReport.summaryText}"
+          </p>
+          <div className="flex flex-col gap-2 mb-4">
+            <div className="flex items-center gap-2 text-sm text-slate-600">
+              <Tag size={14} className="text-emerald-500" />
+              En çok vazgeçilen kategori: <strong className="text-slate-800">{weeklyReport.topCategory}</strong>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-slate-600">
+              <Clock size={14} className="text-emerald-500" />
+              En aktif saat: <strong className="text-slate-800">{weeklyReport.mostActiveTimeRange}</strong>
+            </div>
+          </div>
+          <button
+            onClick={onNavigateInsights}
+            className="text-xs font-bold text-emerald-600 uppercase tracking-widest flex items-center justify-between w-full pt-3 border-t border-slate-100 hover:text-emerald-700 transition-colors"
+          >
+            <span>Tüm İçgörüleri Gör</span>
+            <span>→</span>
+          </button>
+        </div>
 
         {/* AI Insights Section */}
         <div className="bg-slate-800 rounded-3xl p-6 text-slate-200 shadow-sm">
@@ -73,7 +103,10 @@ export function Home({ entries, insightData, onAddClick }: HomeProps) {
             "{insightData?.insight || "Tasarruf verilerin yükleniyor. Senin için özel analizler hazırlıyorum..."}"
           </p>
           <div className="mt-6 pt-4 border-t border-slate-700">
-            <button className="text-xs font-bold text-emerald-400 uppercase tracking-widest flex items-center justify-between w-full hover:text-emerald-300 transition-colors">
+            <button
+              onClick={onNavigateInsights}
+              className="text-xs font-bold text-emerald-400 uppercase tracking-widest flex items-center justify-between w-full hover:text-emerald-300 transition-colors"
+            >
               <span>Detaylı Analizi Gör</span>
               <span>→</span>
             </button>
@@ -90,7 +123,13 @@ export function Home({ entries, insightData, onAddClick }: HomeProps) {
               <h2 className="text-xl font-bold text-slate-800">Son Vazgeçişlerin</h2>
               <p className="text-sm text-slate-400">Son 7 gün içindeki tasarrufların</p>
             </div>
-            <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-4 py-2 rounded-full cursor-pointer hover:bg-emerald-100 transition-colors">Tümünü Gör</span>
+            <button
+              onClick={onAddClick}
+              className="text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 px-4 py-2.5 rounded-full flex items-center gap-1.5 transition-colors shrink-0"
+            >
+              <Plus size={14} />
+              Yeni Vazgeçiş Ekle
+            </button>
           </div>
           
           <div className="space-y-4 max-h-[420px] overflow-y-auto pr-2 custom-scrollbar">
@@ -121,8 +160,8 @@ export function Home({ entries, insightData, onAddClick }: HomeProps) {
           </div>
         </div>
 
-        {/* Desktop Only Extra Stats Panel */}
-        <div className="hidden md:grid grid-cols-2 gap-6">
+        {/* Hedef Durumu & Günün Motivasyonu */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
             <h4 className="text-xs font-bold text-slate-400 uppercase mb-4">Hedef Durumu: İtalya Tatili</h4>
             <div className="flex justify-between items-end mb-2">
