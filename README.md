@@ -94,6 +94,7 @@ Proje toplam **3 Sprint** olarak planlanmıştır.
 | Sprint 3 | Son Rötuşlar ve Teslim | 20 Temmuz – 2 Ağustos | 9 |
 
 Toplam planlanan görev sayısı **27**'dir.
+[Backlog_Board](https://github.com/KaanKerimGodek/YZTA_Bootcamp2026_Grup1/blob/main/Backlog_Board)
 
 Backlog Dağıtım Mantığı
 Görevler şu mantıkla 3 sprint'e bölündü:
@@ -139,13 +140,19 @@ Sprint sonunda;
 ### Ürün Durumu: 
 - **Ekran Görüntüleri**: Uygulamanın hem mobil hem de web üzerinden kullanılabilmesi istenmiş ve ikisi için ayrı ayrı tasarımlar yapılmıştır. 
 
-| Ana Sayfa | Vazgeçiş Ekle | İstatistikler | Profil  |
-|-----------|---------------|---------------|---------|
+| Ana Sayfa(Mobil) | Vazgeçiş Ekle(Mobil) | İstatistikler(Mobil) | Profil(Mobil) |
+|------------------|----------------------|----------------------|---------------|
 | <img width="200" src="images/anasayfa.png"> | <img width="200" src="images/vazgecisekle.png"> | <img width="200" src="images/istatistikler.png"> |<img width="200" src="images/profil.png"> |
+
+| Ana Sayfa(Web) | Vazgeçiş Ekle(Web) | İstatistikler(Web) |İstatistikler(Web) |
+|----------------|--------------------|--------------------|-------------------|
+| <img width="200" src="images/web-anasayfa1.png"> | <img width="200" src="images/web-ekleme.png"> | <img width="200" src="images/web-istatistik1.png"> |<img width="200" src="images/web-istatistik2.png"> |
 
 ---
 
   ### Sprint Review:
+Sprint Review katılımcıları: Hüsna Altın, Elif İrem Akdoğan, Kaan Kerim Gödek, Yağız Ali Çolak.
+
 Sprint 1'in temel hedefi, yapay zeka entegrasyonu olmadan uçtan uca çalışan bir iskelet prototip ortaya çıkarmaktı.
 Tamamlanan:
 - Takım kimliği ve GitHub repo kurulumu
@@ -168,5 +175,71 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 - Scrum rollerinin işlevselliği ekip çalışmasına olumlu katkı sağladı
 - Daily Scrum'ların daha düzenli aralıklarla yapılması hedefleniyor
 - Trello üzerindeki görev takibinin daha aktif kullanılması planlanıyor
+
+
+
+
+  ---
+# 🚀 Sprint 2
+
+•	Sprint 2 Backlog Dağıtımı — Akıllı Katman (Intelligence): Yapay zeka entegrasyonu bu sprintte gelir: kategori sınıflandırma, davranış analizi, doğal dilde içgörü üretimi. Amaç: Final değerlendirmedeki 35 puanlık "Yapay Zeka Öğeleri" kriterinin temelini bu sprintte sağlamlaştırmak.
+
+  
+### Daily Scrum - WhatsApp Yazışmaları
+
+- Daily Scrum toplantıları Slack üzerinden yapılmaya devam edilmiştir. Yazışmalar ise WhatsApp ve Slack üzerinden yapılmıştır.
+[Sprint 2 Daily Scrum](https://github.com/KaanKerimGodek/YZTA_Bootcamp2026_Grup1/tree/main/Sprint2_Daily_Scrum)
+<img width="200" src="Sprint2_Daily_Scrum/Sprint2_1.PNG"> 
+
+---
+
+### Sprint 2 board update: 
+- **Sprint Board Screenshot**: Görev takip ve paylaşımları Trello üzerinden yapılmaya devam edilmiştir. 
+ <img width="320" src="images/pano1.PNG">  <img width="320" src="images/pano2.PNG">  <img width="320" src="images/pano3.PNG"> <img width="320" src="images/x.PNG"> 
+
+---
+
+### Ürün Durumu: 
+- **Ekran Görüntüleri**: Uygulamanın hem mobil hem de web tarafında 2. sprint için hedeflenen değişiklikler yapılmıştır.
+
+| Hedef(Mobil) | İçgörü(Mobil) | Tasarruf Eşiği(Mobil) | Tetikleyici Anlar(Mobil) |
+|------------------|----------------------|----------------------|---------------|
+| <img src="images/Hedef.jpeg" style="width:200px; height:300px; object-fit:cover;"> | <img src="images/icgoruler.png" style="width:200px; height:300px; object-fit:cover;"> | <img src="images/hedef2.PNG" style="width:200px; height:300px; object-fit:cover;"> | <img src="images/An.PNG" style="width:200px; height:300px; object-fit:cover;"> |
+
+| Ana Sayfa(Web) | İçgörü(Web) | İstatistikler(Web) |İstatistikler(Web) |
+|----------------|--------------------|--------------------|-------------------|
+| <img width="200" src="images/web-anaayfa1.png"> | <img width="200" src="images/web-eklme.png"> | <img width="200" src="images/web-istatstik1.png"> |<img width="200" src="images/web-istatisik2.png"> |
+
+---
+
+  ### Sprint Review:
+Sprint Review katılımcıları: Hüsna Altın, Elif İrem Akdoğan, Kaan Kerim Gödek, Yağız Ali Çolak.
+
+Sprint 2'nin temel hedefi, yapay zeka katmanını entegre ederek ürünü "akıllı" hale getirmekti.
+Tamamlanan:
+- AI servis seçimi ve API bağlantısı yapıldı.
+- AI ile otomatik kategori sınıflandırma eklendi.
+- Tetikleyici an analizi yapılarak hangi zaman diliminde en çok neyden vazgeçildiği belirlendi.
+- Haftalık içgörü metni üretimi eklenerek motivasyon artışı amaçlandı.
+- İçgörü ekranının arayüze eklenmesi ve geliştirilmesi tamamlandı.
+- Tasarruf eşiği ile belirli bir hedef için vazgeçilen harcama miktarının takip edilmesi sağlandı.
+- Veri tutarlılığı ve hata kontrolü yapıldı.
+
+Bir sonraki sprinte devreden:
+- Belirli tasarruf miktarına ulaşıldığında otomatik bildirim/mesaj gönderimi (WhatsApp/Telegram/e-posta).
+
+Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı, devreden görevler Sprint 3'ünn ilk günlerinde kapatılacak.
+
+
+
+  ### Sprint Retrospective:
+- AI servis seçimi birlikte yapıldı, API bağlantısı ve diğer görevler başarıyla tamamlandı.
+- API test süreçlerinde karşılaşılan anlık yoğunluk ve format uyuşmazlıkları, sonraki sprintler için veri doğrulama (validation) süreçlerinin önemini gösterdi.
+- Sprint hedefinin büyük bölümü zamanında teslim edildi.
+- Daily Scrum'lar olumsuz şartlar sebebiyle büyük ölçüde yazışma şeklinde yapıldı.
+- Trello üzerindeki görev takibinin daha aktif kullanılması proje yönetimini büyük ölçüde kolaylaştırdı.
+- Entegrasyon aşamalarının daha pürüzsüz geçmesi adına, sonraki sprintte arayüz ve altyapı testlerinin daha erken günlerde başlatılması planlanıyor.
+
+
 
 

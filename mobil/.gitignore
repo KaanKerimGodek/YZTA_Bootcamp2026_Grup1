@@ -1,0 +1,42 @@
+# Flutter / Dart
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+ios/Pods/
+ios/Podfile.lock
+android/.gradle/
+android/local.properties
+*.iml
+.idea/
+.vscode/
+
+# Generated
+*.g.dart
+*.freezed.dart
+**/generated_plugin_registrant.dart
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+*.keystore
+*.jks
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+/android
+/ios
+/linux
+/macos
+/web
+/windows
+pubspec.lock
+.metadata

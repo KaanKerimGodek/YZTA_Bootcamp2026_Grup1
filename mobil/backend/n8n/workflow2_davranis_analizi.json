@@ -1,0 +1,186 @@
+{
+  "name": "Vazgeçtim — Workflow 2: Davranış Analizi & İçgörü (Cron)",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            { "field": "weeks", "weeksInterval": 1 },
+            { "field": "triggerAtHour": 23 },
+            { "field": "triggerAtMinute": 59 },
+            { "field": "triggerOnDay": 0 }
+          ]
+        }
+      },
+      "id": "cron-trigger",
+      "name": "Cron (Her Pazar 23:59)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "notes": "Backend Steering → Workflow 2: haftalık batch analiz."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Tüm aktif kullanıcıların ID listesini çek (demo: tek kullanıcı).\nreturn [{ json: { user_id: '00000000-0000-0000-0000-000000000000' } }];"
+      },
+      "id": "list-users",
+      "name": "Kullanıcı Listesi",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT item_name, price, ai_category, created_at, EXTRACT(HOUR FROM created_at) AS hour_of_day, EXTRACT(ISODOW FROM created_at) AS day_of_week FROM skipped_items WHERE user_id = $1 AND created_at >= NOW() - INTERVAL '7 days' ORDER BY created_at;",
+        "additionalFields": {
+          "queryParameters": "={{ JSON.stringify([$json.user_id]) }}"
+        }
+      },
+      "id": "fetch-week-items",
+      "name": "Son 7 Gün Kayıtları",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [680, 300],
+      "notes": "Supabase Postgres connection (service_role)."
+    },
+    {
+      "parameters": {
+        "jsCode": "// --- Aggregation (Steering → Node 2) ---\nconst items = $input.all().map(i => i.json).filter(Boolean);\nif (items.length === 0) {\n  return [{ json: { skip: true, reason: 'Son 7 günde kayıt yok' } }];\n}\n\nconst byCat = {};\nlet total = 0;\nlet night = 0;   // 22:00 - 06:00\nlet weekend = 0; // Cumartesi(6) - Pazar(7)\n\nfor (const it of items) {\n  const cat = it.ai_category || 'Diğer';\n  byCat[cat] = (byCat[cat] || 0) + parseFloat(it.price);\n  total += parseFloat(it.price);\n  const h = parseInt(it.hour_of_day, 10);\n  if (h >= 22 || h < 6) night += parseFloat(it.price);\n  if (it.day_of_week === 6 || it.day_of_week === 7) weekend += parseFloat(it.price);\n}\n\nconst topCategory = Object.entries(byCat).sort((a, b) => b[1] - a[1])[0];\n\nreturn [{\n  json: {\n    user_id: $('Kullanıcı Listesi').item.json.user_id,\n    total,\n    count: items.length,\n    top_category: topCategory ? topCategory[0] : null,\n    top_category_total: topCategory ? topCategory[1] : 0,\n    night_total: night,\n    weekend_total: weekend,\n    by_category: byCat,\n    period: 'son_7_gun'\n  }\n}];"
+      },
+      "id": "aggregate-data",
+      "name": "Veri Agregasyonu",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "typeValidation": "loose" },
+          "conditions": [
+            {
+              "id": "has-data",
+              "leftValue": "={{ $json.skip }}",
+              "rightValue": "",
+              "operator": { "type": "boolean", "operation": "notTrue", "name": "filter:notTrue" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-has-data",
+      "name": "Veri var mı?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "modelId": "gemini-1.5-flash",
+        "messages": {
+          "messageValues": [
+            {
+              "role": "system",
+              "content": "Sen Vazgeçtim uygulamasının motive edici tasarruf koçusun. Verilen istatistiklere dayanarak Türkçe, samimi, 2-3 cümlelik motive edici bir içgörü üret. Sayıları ₺ sembolüyle belirt. Suçlayıcı olma; kullanıcıyı övgüye boğ. Sadece içgörü metnini döndür, JSON ya da başlık kullanma."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'İstatistikler: ' + JSON.stringify($json) }}"
+            }
+          ]
+        },
+        "options": { "temperature": 0.7, "maxOutputTokens": 200 }
+      },
+      "id": "llm-insight",
+      "name": "LLM Motivasyon Metni",
+      "type": "@n8n/n8n-nodes-langchain.modelLanguageModel",
+      "typeVersion": 1,
+      "position": [1360, 220]
+    },
+    {
+      "parameters": {
+        "jsCode": "// LLM metnini DB'ye yazacak payload hazırla.\nreturn [{\n  json: {\n    user_id: $('Veri Agregasyonu').item.json.user_id,\n    insight_text: ($input.first().json.content || '').toString().trim(),\n    amount: $('Veri Agregasyonu').item.json.total,\n    generated_at: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "prepare-insight",
+      "name": "İçgörü Hazırla",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1580, 220]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "ai_insights",
+        "columns": "insight_id,user_id,insight_text,amount,generated_at",
+        "additionalFields": {
+          "data": "={{ JSON.stringify({ insight_id: $uuid, user_id: $json.user_id, insight_text: $json.insight_text, amount: $json.amount, generated_at: $json.generated_at }) }}"
+        }
+      },
+      "id": "supabase-insert-insight",
+      "name": "Supabase — Insert Insight",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1800, 220]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Steering → Node 5: opsiyonel push notification tetikleme noktası.\n// Telegram/WhatsApp API entegrasyonu buraya eklenebilir.\nconsole.log('İçgörü üretildi ve kaydedildi:', $json.insight_text);\nreturn [{ json: { done: true } }];"
+      },
+      "id": "notify-noop",
+      "name": "Bildirim (placeholder)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2020, 220]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Veri yoksa sessizce atla.\nconsole.log('Skip:', $json.reason);\nreturn [{ json: { done: false, reason: $json.reason } }];"
+      },
+      "id": "skip-noop",
+      "name": "Atla (veri yok)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1360, 420]
+    }
+  ],
+  "connections": {
+    "Cron (Her Pazar 23:59)": {
+      "main": [ [ { "node": "Kullanıcı Listesi", "type": "main", "index": 0 } ] ]
+    },
+    "Kullanıcı Listesi": {
+      "main": [ [ { "node": "Son 7 Gün Kayıtları", "type": "main", "index": 0 } ] ]
+    },
+    "Son 7 Gün Kayıtları": {
+      "main": [ [ { "node": "Veri Agregasyonu", "type": "main", "index": 0 } ] ]
+    },
+    "Veri Agregasyonu": {
+      "main": [ [ { "node": "Veri var mı?", "type": "main", "index": 0 } ] ]
+    },
+    "Veri var mı?": {
+      "main": [
+        [ { "node": "LLM Motivasyon Metni", "type": "main", "index": 0 } ],
+        [ { "node": "Atla (veri yok)", "type": "main", "index": 0 } ]
+      ]
+    },
+    "LLM Motivasyon Metni": {
+      "main": [ [ { "node": "İçgörü Hazırla", "type": "main", "index": 0 } ] ]
+    },
+    "İçgörü Hazırla": {
+      "main": [ [ { "node": "Supabase — Insert Insight", "type": "main", "index": 0 } ] ]
+    },
+    "Supabase — Insert Insight": {
+      "main": [ [ { "node": "Bildirim (placeholder)", "type": "main", "index": 0 } ] ]
+    }
+  },
+  "settings": { "executionOrder": "v1" },
+  "_notes": [
+    "Import: n8n → Workflows → Import from File → bu JSON.",
+    "Credentials: Supabase (service_role), Google Gemini API key.",
+    "Tek kullanıcı varsayılı; üretimde 'Kullanıcı Listesi' node'u users tablosundan select etmeli.",
+    "Telegram/WhatsApp için n8n HTTP Request node'u 'Bildirim (placeholder)' yerine eklenebilir."
+  ]
+}
