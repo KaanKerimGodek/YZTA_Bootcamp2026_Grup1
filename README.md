@@ -208,7 +208,7 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 
 | Ana Sayfa(Web) | İçgörü(Web) | Tasarruf Eşiği(Web) | Tetikleyici Anlar(Web) |
 |----------------|--------------------|--------------------|-------------------|
-|<img src="images/web_anasayfa2.png" style="width:200px; height:300px; object-fit:cover;"> | <img src="images/web_icgoru1.png" style="width:200px; height:300px; object-fit:cover;"> | <img src="images/web_icgoru3.png" style="width:200px; height:300px; object-fit:cover;"> | <img src="images/web_icgoru2.png" style="width:200px; height:300px; object-fit:cover;"> |
+|<img src="images/web_anasayfa2.png" style="width:200px; height:200px; object-fit:cover;"> | <img src="images/web_icgoru1.png" style="width:200px; height:200px; object-fit:cover;"> | <img src="images/web_icgoru3.png" style="width:200px; height:200px; object-fit:cover;"> | <img src="images/web_icgoru2.png" style="width:200px; height:200px; object-fit:cover;"> |
 
 ---
 
