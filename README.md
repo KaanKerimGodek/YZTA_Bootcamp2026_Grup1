@@ -56,7 +56,6 @@ StackOverthink
 | Scrum Master | Hüsna Altın |
 | Product Owner | Elif İrem Akdoğan |
 | Developer | Kaan Kerim Gödek |
-| Developer | Tuana Nehir Baran |
 | Developer | Yağız Ali Çolak |
 
 ---
