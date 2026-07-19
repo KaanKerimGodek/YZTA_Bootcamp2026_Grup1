@@ -152,6 +152,7 @@ Sprint sonunda;
 
   ### Sprint Review:
 Sprint Review katılımcıları: Hüsna Altın, Elif İrem Akdoğan, Kaan Kerim Gödek, Yağız Ali Çolak.
+
 Sprint 1'in temel hedefi, yapay zeka entegrasyonu olmadan uçtan uca çalışan bir iskelet prototip ortaya çıkarmaktı.
 Tamamlanan:
 - Takım kimliği ve GitHub repo kurulumu
@@ -213,6 +214,7 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 
   ### Sprint Review:
 Sprint Review katılımcıları: Hüsna Altın, Elif İrem Akdoğan, Kaan Kerim Gödek, Yağız Ali Çolak.
+
 Sprint 2'nin temel hedefi, yapay zeka katmanını entegre ederek ürünü "akıllı" hale getirmekti.
 Tamamlanan:
 - AI servis seçimi ve API bağlantısı yapıldı.
