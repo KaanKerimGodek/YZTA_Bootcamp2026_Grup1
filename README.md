@@ -187,7 +187,7 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 
 - Daily Scrum toplantıları Slack üzerinden yapılmaya devam edilmiştir. Yazışmalar ise WhatsApp ve Slack üzerinden yapılmıştır.
 [Sprint 2 Daily Scrum](https://github.com/KaanKerimGodek/YZTA_Bootcamp2026_Grup1/tree/main/Sprint2_Daily_Scrum/Sprint2_1.PNG)
-<img width="200" src="images/Sprint2_1.PNG"> Sprint2_Daily_Scrum/Sprint2_1.PNG
+<img width="200" src="Sprint2_Daily_Scrum/Sprint2_1.PNG"> 
 
 ---
 
