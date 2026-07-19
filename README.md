@@ -182,7 +182,9 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
   ---
 # 🚀 Sprint 2
 
-•	Sprint 2 Backlog Dağıtımı — Akıllı Katman (Intelligence): Yapay zeka entegrasyonu bu sprintte gelir: kategori sınıflandırma, davranış analizi, doğal dilde içgörü üretimi. Amaç: Final değerlendirmedeki 35 puanlık "Yapay Zeka Öğeleri" kriterinin temelini bu sprintte sağlamlaştırmak.
+•	Sprint-2 Backlog Dağıtımı — Akıllı Katman (Intelligence): Yapay zeka entegrasyonu bu sprintte gelir: kategori sınıflandırma, davranış analizi, doğal dilde içgörü üretimi. Amaç: Final değerlendirmedeki 35 puanlık "Yapay Zeka Öğeleri" kriterinin temelini bu sprintte sağlamlaştırmak.
+
+•	Sprint-2 Board Update:[Sprint board screenshot](https://github.com/KaanKerimGodek/YZTA_Bootcamp2026_Grup1/tree/main/Backlog_Board/backlog2.PNG)
 
   
 ### Daily Scrum - WhatsApp Yazışmaları
