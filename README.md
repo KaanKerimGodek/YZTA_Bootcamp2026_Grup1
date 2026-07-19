@@ -195,8 +195,8 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 
 ### Sprint 2 board update: 
 - **Sprint Board Screenshot**: Görev takip ve paylaşımları Trello üzerinden yapılmaya devam edilmiştir.
-- 
- <img src="images/pano1.PNG" style="width:225px; height:200px; object-fit:cover;">  <img src="images/pano2.PNG" style="width:225px; height:200px; object-fit:cover;">  <img src="images/pano3.PNG" style="width:225px; height:200px; object-fit:cover;">  <img src="images/pano4.PNG" style="width:225px; height:200px; object-fit:cover;"> 
+ 
+ <img src="images/pano1.PNG" style="width:250px; height:200px; object-fit:cover;">  <img src="images/pano2.PNG" style="width:250px; height:200px; object-fit:cover;">  <img src="images/pano3.PNG" style="width:250px; height:200px; object-fit:cover;">  <img src="images/pano4.PNG" style="width:250px; height:200px; object-fit:cover;"> 
 
 ---
 
