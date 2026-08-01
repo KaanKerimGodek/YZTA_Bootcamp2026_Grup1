@@ -62,7 +62,6 @@ StackOverthink
 
 # ✨ Ürün Özellikleri
 
-- 🛒 Sanal Sepet Deneyimi
 - 💰 Tasarruf Cüzdanı
 - 📝 Günlük Vazgeçiş Kaydı
 - 📊 Harcama Alışkanlığı Takibi
