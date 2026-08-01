@@ -256,14 +256,14 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 
 - Daily Scrum toplantıları Slack üzerinden yapılmaya devam edilmiştir. Yazışmalar ise WhatsApp ve Slack üzerinden yapılmıştır.
 [Sprint 3 Daily Scrum](https://github.com/KaanKerimGodek/YZTA_Bootcamp2026_Grup1/tree/main/Sprint3_Daily_Scrum)
-<img width="200" src="Sprint3_Daily_Scrum/Sprint3.PNG"> 
+<img width="200" src="Sprint3_Daily_Scrum/sprint3.PNG"> 
 
 ---
 
 ### Sprint 3 board update: 
 - **Sprint Board Screenshot**: Görev takip ve paylaşımları Trello üzerinden yapılmaya devam edilmiştir.
  
- <img src="images/Trello_3_1.PNG" style="width:240px; height:200px; object-fit:cover;">  <img src="images/Trello_3_2.PNG" style="width:240px; height:200px; object-fit:cover;">  <img src="images/Trello_3_3.PNG" style="width:240px; height:200px; object-fit:cover;"> 
+ <img src="images/Trello_3_1.PNG" style="width:280px; height:200px; object-fit:cover;">  <img src="images/Trello_3_2.PNG" style="width:280px; height:200px; object-fit:cover;">  <img src="images/Trello_3_3.PNG" style="width:280px; height:200px; object-fit:cover;"> 
 
 ---
 
@@ -284,15 +284,16 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 Sprint Review katılımcıları: Hüsna Altın, Elif İrem Akdoğan, Kaan Kerim Gödek, Yağız Ali Çolak.
 
 Sprint 3'ün temel hedefi; ürünü cilalamak, test etmek, veritabanı mantığını olgunlaştırmak ve final teslime hazır hale getirmekti.
+
 Tamamlanan:
 
--Tasarruf Eşiği ve Bildirim Sistemi: Kullanıcı hedefine ulaştığında (total_saved >= savings_goal) n8n üzerinden otomatik tebrik e-postası gönderimi sağlandı.
--UI/UX Son Rötuşlar: Mobil ve Web arayüzlerinde görsel geliştirmeler yapıldı, veri senkronizasyonu optimize edildi.
--Sıfırlama ve Geçmiş Mantığı (RPC): Yeni hedef eklendiğinde bakiyenin sıfırlanması ve eski hedeflerin completed_goals arşive kaldırılması için Supabase veritabanı fonksiyonu yazıldı.
--Performans ve Hata Ayıklama: Gemini API kota/rate-limit hataları çözüldü, n8n webhook yanıt formatı hem Web hem Mobil uyumlu hale getirildi.
--Dış Kullanıcı Testi: Gerçek kullanıcı geri bildirimleri toplandı, tespit edilen küçük aksaklıklar ve timeout sorunları düzeltildi.
--Final Teslim Hazırlığı: GitHub reposu temizlendi, README güncellendi ve teslim formu eksiksiz dolduruldu.
--Scrum boyunca büyük bir özveriyle çalışıldığı için ekip üyeleri birbirini tebrik etti
+- Tasarruf Eşiği ve Bildirim Sistemi: Kullanıcı hedefine ulaştığında (total_saved >= savings_goal) n8n üzerinden otomatik tebrik e-postası gönderimi sağlandı.
+- UI/UX Son Rötuşlar: Mobil ve Web arayüzlerinde görsel geliştirmeler yapıldı, veri senkronizasyonu optimize edildi.
+- Sıfırlama ve Geçmiş Mantığı (RPC): Yeni hedef eklendiğinde bakiyenin sıfırlanması ve eski hedeflerin completed_goals arşive kaldırılması için Supabase veritabanı fonksiyonu yazıldı.
+- Performans ve Hata Ayıklama: Gemini API kota/rate-limit hataları çözüldü, n8n webhook yanıt formatı hem Web hem Mobil uyumlu hale getirildi.
+- Dış Kullanıcı Testi: Gerçek kullanıcı geri bildirimleri toplandı, tespit edilen küçük aksaklıklar ve timeout sorunları düzeltildi.
+- Final Teslim Hazırlığı: GitHub reposu temizlendi, README güncellendi ve teslim formu eksiksiz dolduruldu.
+- Scrum boyunca büyük bir özveriyle çalışıldığı için ekip üyeleri birbirini tebrik etti
 
 
 
