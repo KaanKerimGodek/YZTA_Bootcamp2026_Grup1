@@ -263,7 +263,7 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 ### Sprint 3 board update: 
 - **Sprint Board Screenshot**: Görev takip ve paylaşımları Trello üzerinden yapılmaya devam edilmiştir.
  
- <img src="images/Trello_3_1.PNG" style="width:280px; height:200px; object-fit:cover;">  <img src="images/Trello_3_2.PNG" style="width:280px; height:200px; object-fit:cover;">  <img src="images/Trello_3_3.PNG" style="width:280px; height:200px; object-fit:cover;"> 
+ <img src="images/Trello_3_1.PNG" style="width:310px; height:240px; object-fit:cover;">  <img src="images/Trello_3_2.PNG" style="width:310px; height:240px; object-fit:cover;">  <img src="images/Trello_3_3.PNG" style="width:310px; height:240px; object-fit:cover;"> 
 
 ---
 
