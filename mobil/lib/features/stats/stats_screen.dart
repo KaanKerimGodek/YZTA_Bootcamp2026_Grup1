@@ -237,18 +237,28 @@ class _CategoryBar extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    category,
-                    style: AppTypography.bodyBold.copyWith(
-                      fontSize: 14,
-                      color: AppColors.textPrimary,
+                  Flexible(
+                    child: Text(
+                      category,
+                      style: AppTypography.bodyBold.copyWith(
+                        fontSize: 14,
+                        color: AppColors.textPrimary,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                   ),
-                  Text(
-                    Formatting.currency(amount, decimal: false),
-                    style: AppTypography.bodyBold.copyWith(
-                      fontSize: 13,
-                      color: AppColors.textPrimary,
+                  const SizedBox(width: AppSpacing.sm),
+                  Flexible(
+                    child: Text(
+                      Formatting.currency(amount, decimal: false),
+                      style: AppTypography.bodyBold.copyWith(
+                        fontSize: 13,
+                        color: AppColors.textPrimary,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      textAlign: TextAlign.end,
                     ),
                   ),
                 ],

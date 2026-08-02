@@ -56,14 +56,12 @@ StackOverthink
 | Scrum Master | Hüsna Altın |
 | Product Owner | Elif İrem Akdoğan |
 | Developer | Kaan Kerim Gödek |
-| Developer | Tuana Nehir Baran |
 | Developer | Yağız Ali Çolak |
 
 ---
 
 # ✨ Ürün Özellikleri
 
-- 🛒 Sanal Sepet Deneyimi
 - 💰 Tasarruf Cüzdanı
 - 📝 Günlük Vazgeçiş Kaydı
 - 📊 Harcama Alışkanlığı Takibi
@@ -182,7 +180,9 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
   ---
 # 🚀 Sprint 2
 
-•	Sprint 2 Backlog Dağıtımı — Akıllı Katman (Intelligence): Yapay zeka entegrasyonu bu sprintte gelir: kategori sınıflandırma, davranış analizi, doğal dilde içgörü üretimi. Amaç: Final değerlendirmedeki 35 puanlık "Yapay Zeka Öğeleri" kriterinin temelini bu sprintte sağlamlaştırmak.
+•	Sprint-2 Backlog Dağıtımı — Akıllı Katman (Intelligence): Yapay zeka entegrasyonu bu sprintte gelir: kategori sınıflandırma, davranış analizi, doğal dilde içgörü üretimi. Amaç: Final değerlendirmedeki 35 puanlık "Yapay Zeka Öğeleri" kriterinin temelini bu sprintte sağlamlaştırmak.
+
+•	Sprint-2 Board Update:[Sprint board screenshot](https://github.com/KaanKerimGodek/YZTA_Bootcamp2026_Grup1/tree/main/Backlog_Board/backlog2.PNG)
 
   
 ### Daily Scrum - WhatsApp Yazışmaları
@@ -194,8 +194,9 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 ---
 
 ### Sprint 2 board update: 
-- **Sprint Board Screenshot**: Görev takip ve paylaşımları Trello üzerinden yapılmaya devam edilmiştir. 
- <img width="320" src="images/pano1.PNG">  <img width="320" src="images/pano2.PNG">  <img width="320" src="images/pano3.PNG"> <img width="320" src="images/x.PNG"> 
+- **Sprint Board Screenshot**: Görev takip ve paylaşımları Trello üzerinden yapılmaya devam edilmiştir.
+ 
+ <img src="images/pano1.PNG" style="width:240px; height:200px; object-fit:cover;">  <img src="images/pano2.PNG" style="width:240px; height:200px; object-fit:cover;">  <img src="images/pano3.PNG" style="width:240px; height:200px; object-fit:cover;">  <img src="images/pano4.PNG" style="width:240px; height:200px; object-fit:cover;"> 
 
 ---
 
@@ -204,11 +205,11 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 
 | Hedef(Mobil) | İçgörü(Mobil) | Tasarruf Eşiği(Mobil) | Tetikleyici Anlar(Mobil) |
 |------------------|----------------------|----------------------|---------------|
-| <img src="images/Hedef.jpeg" style="width:200px; height:300px; object-fit:cover;"> | <img src="images/icgoruler.png" style="width:200px; height:300px; object-fit:cover;"> | <img src="images/hedef2.PNG" style="width:200px; height:300px; object-fit:cover;"> | <img src="images/An.PNG" style="width:200px; height:300px; object-fit:cover;"> |
+| <img src="images/Hedef.jpeg" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/icgoruler.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/hedef2.PNG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/An.PNG" style="width:250px; height:300px; object-fit:cover;"> |
 
-| Ana Sayfa(Web) | İçgörü(Web) | İstatistikler(Web) |İstatistikler(Web) |
+| Ana Sayfa(Web) | İçgörü(Web) | Tasarruf Eşiği(Web) | Tetikleyici Anlar(Web) |
 |----------------|--------------------|--------------------|-------------------|
-| <img width="200" src="images/web-anaayfa1.png"> | <img width="200" src="images/web-eklme.png"> | <img width="200" src="images/web-istatstik1.png"> |<img width="200" src="images/web-istatisik2.png"> |
+|<img src="images/web_anasayfa2.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="images/web_icgoru1.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="images/web_icgoru3.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="images/web_icgoru2.png" style="width:250px; height:250px; object-fit:cover;"> |
 
 ---
 
@@ -226,9 +227,9 @@ Tamamlanan:
 - Veri tutarlılığı ve hata kontrolü yapıldı.
 
 Bir sonraki sprinte devreden:
-- Belirli tasarruf miktarına ulaşıldığında otomatik bildirim/mesaj gönderimi (WhatsApp/Telegram/e-posta).
+- Belirli tasarruf miktarına ulaşıldığında otomatik bildirim/mesaj gönderimi (WhatsApp/Telegram/e-posta), Web platformunun altyapı servisleri (API ve n8n) ile olan uçtan uca veri entegrasyonunun eksiklerinin tamamlanması.
 
-Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı, devreden görevler Sprint 3'ünn ilk günlerinde kapatılacak.
+Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı, devreden görevler Sprint 3'ün ilk günlerinde kapatılacak.
 
 
 
@@ -239,6 +240,67 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 - Daily Scrum'lar olumsuz şartlar sebebiyle büyük ölçüde yazışma şeklinde yapıldı.
 - Trello üzerindeki görev takibinin daha aktif kullanılması proje yönetimini büyük ölçüde kolaylaştırdı.
 - Entegrasyon aşamalarının daha pürüzsüz geçmesi adına, sonraki sprintte arayüz ve altyapı testlerinin daha erken günlerde başlatılması planlanıyor.
+
+
+
+
+    ---
+# 🚀 Sprint 3
+
+•	Sprint-3 Backlog Dağıtımı — Cilalama ve Teslim (Polish & Delivery): UI/UX iyileştirme, hataların giderilmesi, kullanıcı testi, video ve son teslim dokümantasyonu. Amaç: "Ürün bütünlüğü" ve "Fonksiyonel yeterlilik" kriterlerini maksimize etmek
+
+•	Sprint-3 Board Update:[Sprint board screenshot](https://github.com/KaanKerimGodek/YZTA_Bootcamp2026_Grup1/tree/main/Backlog_Board/backlog3.PNG)
+
+  
+### Daily Scrum - WhatsApp Yazışmaları
+
+- Daily Scrum toplantıları Slack üzerinden yapılmaya devam edilmiştir. Yazışmalar ise WhatsApp ve Slack üzerinden yapılmıştır.
+[Sprint 3 Daily Scrum](https://github.com/KaanKerimGodek/YZTA_Bootcamp2026_Grup1/tree/main/Sprint3_Daily_Scrum)
+<img width="200" src="Sprint3_Daily_Scrum/sprint3.PNG"> 
+
+---
+
+### Sprint 3 board update: 
+- **Sprint Board Screenshot**: Görev takip ve paylaşımları Trello üzerinden yapılmaya devam edilmiştir.
+ 
+ <img src="images/Trello_3_1.PNG" style="width:310px; height:240px; object-fit:cover;">  <img src="images/Trello_3_2.PNG" style="width:310px; height:240px; object-fit:cover;">  <img src="images/Trello_3_3.PNG" style="width:310px; height:240px; object-fit:cover;"> 
+
+---
+
+### Ürün Durumu: 
+- **Ekran Görüntüleri**: Uygulamanın hem mobil hem de web tarafında son sprint için gereken nihai düzenlemeler yapılmış ve uygulama son halini almıştır.
+
+| Hedef(Mobil) | İçgörü(Mobil) | Tasarruf Eşiği(Mobil) | Tetikleyici Anlar(Mobil) |
+|------------------|----------------------|----------------------|---------------|
+| <img src="images/Hedef.jpe" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/icgoruler.ng" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/hedef2.PG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/An.NG" style="width:250px; height:300px; object-fit:cover;"> |
+
+| Ana Sayfa(Web) | İçgörü(Web) | Tasarruf Eşiği(Web) | Tetikleyici Anlar(Web) |
+|----------------|--------------------|--------------------|-------------------|
+|<img src="images/weanasayfa2.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="images/we_icgoru1.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="images/web_icru3.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="images/web_ioru2.png" style="width:250px; height:250px; object-fit:cover;"> |
+
+---
+
+  ### Sprint Review:
+Sprint Review katılımcıları: Hüsna Altın, Elif İrem Akdoğan, Kaan Kerim Gödek, Yağız Ali Çolak.
+
+Sprint 3'ün temel hedefi; ürünü cilalamak, test etmek, veritabanı mantığını olgunlaştırmak ve final teslime hazır hale getirmekti.
+
+Tamamlanan:
+
+- Tasarruf Eşiği ve Bildirim Sistemi: Kullanıcı hedefine ulaştığında (total_saved >= savings_goal) n8n üzerinden otomatik tebrik e-postası gönderimi sağlandı.
+- UI/UX Son Rötuşlar: Mobil ve Web arayüzlerinde görsel geliştirmeler yapıldı, veri senkronizasyonu optimize edildi.
+- Sıfırlama ve Geçmiş Mantığı (RPC): Yeni hedef eklendiğinde bakiyenin sıfırlanması ve eski hedeflerin completed_goals arşive kaldırılması için Supabase veritabanı fonksiyonu yazıldı.
+- Performans ve Hata Ayıklama: Gemini API kota/rate-limit hataları çözüldü, n8n webhook yanıt formatı hem Web hem Mobil uyumlu hale getirildi.
+- Final Teslim Hazırlığı: GitHub reposu temizlendi, README güncellendi ve teslim formu eksiksiz dolduruldu.
+- Scrum boyunca büyük bir özveriyle çalışıldığı için ekip üyeleri birbirini tebrik etti
+
+
+
+  ### Sprint Retrospective:
+
+ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ
+
+
 
 
 
