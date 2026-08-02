@@ -280,7 +280,7 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 
 <div style="overflow-x: auto; white-space: nowrap;">
 
-| Hedef(Mobil) | İçgörü(Mobil) | Tasarruf Eşiği(Mobil) | Tetikleyici Anlar(Mobil) | Hedef(Mobil) | İçgörü(Mobil) | Tasarruf Eşiği(Mobil) | Tetikleyici Anlar(Mobil) |
+| Mail | Anasayfa(Web) | Anasayfa(Web) | İçgörü(Web) | İçgörü(Web) | İçgörü(Web) | İstatistik(Web) | İstatistik(Web) |
 |---|---|---|---|---|---|---|---|
 | <img src="images/Hedef.jpe" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/icgoruler.ng" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/hedef2.PG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/An.NG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/Hedef.jpe" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/icgoruler.ng" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/hedef2.PG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/An.NG" style="width:250px; height:300px; object-fit:cover;"> |
 
