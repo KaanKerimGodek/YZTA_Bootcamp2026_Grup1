@@ -7,41 +7,43 @@ import { Profile } from './components/Profile';
 import { Login } from './components/Login';
 import { Register } from './components/Register';
 import { AddModal } from './components/AddModal';
-import { Entry, InsightData } from './types';
+import { Entry, InsightData, SavingsGoal } from './types';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'home' | 'stats' | 'insights' | 'profile'>('home');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [entries, setEntries] = useState<Entry[]>([]);
   const [insightData, setInsightData] = useState<InsightData | null>(null);
+  const [goal, setGoal] = useState<SavingsGoal | null>(null);
+  const [motivationQuote, setMotivationQuote] = useState<string>('');
   const [loading, setLoading] = useState(true);
+  const [insightsLoading, setInsightsLoading] = useState(false);
 
-  // --- Kimlik Doğrulama (mock) ---
-  // NOT: Gerçek kimlik doğrulama backend/Supabase entegrasyonu tamamlandığında
-  // bu state'ler gerçek oturum bilgileriyle değiştirilecektir.
+  // --- Kimlik Doğrulama ---
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authScreen, setAuthScreen] = useState<'login' | 'register'>('login');
   const [userName, setUserName] = useState('Kullanıcı');
   const [userEmail, setUserEmail] = useState('kullanici@example.com');
+  const [userId, setUserId] = useState<string>('');
 
   // Initial load
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (isAuthenticated && userId) {
+      fetchData();
+    }
+  }, [isAuthenticated, userId]);
 
   const fetchData = async () => {
+    if (!userId) return;
     try {
       setLoading(true);
-      const [entriesRes, insightsRes] = await Promise.all([
-        fetch('/api/entries'),
-        fetch('/api/insights')
-      ]);
+      const entriesRes = await fetch('/api/entries', {
+        headers: { 'x-user-id': userId }
+      });
       
       const entriesData = await entriesRes.json();
-      const insightsData = await insightsRes.json();
-      
-      setEntries(entriesData);
-      setInsightData(insightsData);
+      setEntries(Array.isArray(entriesData) ? entriesData : []);
+      await Promise.all([fetchGoals(), fetchMotivation()]);
     } catch (err) {
       console.error("Failed to load data", err);
     } finally {
@@ -49,11 +51,73 @@ export default function App() {
     }
   };
 
+  const fetchGoals = async () => {
+    if (!userId) return;
+    try {
+      const res = await fetch('/api/goals', { headers: { 'x-user-id': userId } });
+      const data = await res.json();
+      // Backend hata objesi dönerse (ör. beklenmedik hata) tek bir hedef olarak ele almayalım.
+      setGoal(data && typeof data === 'object' && !data.error ? data : null);
+    } catch (err) {
+      console.error("Failed to load goals", err);
+    }
+  };
+
+  const fetchMotivation = async () => {
+    if (!userId) return;
+    try {
+      const res = await fetch('/api/motivation', { headers: { 'x-user-id': userId } });
+      const data = await res.json();
+      setMotivationQuote(data.quote);
+    } catch (err) {
+      console.error("Failed to load motivation quote", err);
+    }
+  };
+
+  const addGoal = async (title: string, targetAmount: number) => {
+    if (!userId) return;
+    const res = await fetch('/api/goals', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-user-id': userId
+      },
+      body: JSON.stringify({ title, targetAmount })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || 'Hedef eklenemedi.');
+    }
+    setGoal(data);
+  };
+
+  const refreshInsights = async () => {
+    if (!userId) return;
+    try {
+      setInsightsLoading(true);
+      const res = await fetch('/api/insights/refresh', {
+        method: 'POST',
+        headers: { 'x-user-id': userId }
+      });
+      
+      const data = await res.json();
+      setInsightData(data);
+    } catch (err) {
+      console.error("Failed to refresh insights", err);
+    } finally {
+      setInsightsLoading(false);
+    }
+  };
+
   const handleAddEntry = async (title: string, amount: number, category: string) => {
+    if (!userId) return;
     try {
       const res = await fetch('/api/entries', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-user-id': userId
+        },
         body: JSON.stringify({ title, amount, category })
       });
       
@@ -66,15 +130,17 @@ export default function App() {
     }
   };
 
-  const handleLogin = (email: string) => {
+  const handleLogin = (email: string, uid: string) => {
     setUserEmail(email);
+    setUserId(uid);
     setIsAuthenticated(true);
     setActiveTab('home');
   };
 
-  const handleRegister = (name: string, email: string) => {
+  const handleRegister = (name: string, email: string, uid: string) => {
     setUserName(name || 'Kullanıcı');
     setUserEmail(email);
+    setUserId(uid);
     setIsAuthenticated(true);
     setActiveTab('home');
   };
@@ -82,6 +148,11 @@ export default function App() {
   const handleLogout = () => {
     setIsAuthenticated(false);
     setAuthScreen('login');
+    setUserId('');
+    setEntries([]);
+    setInsightData(null);
+    setGoal(null);
+    setMotivationQuote('');
   };
 
   if (!isAuthenticated) {
@@ -109,15 +180,28 @@ export default function App() {
             <Home
               entries={entries}
               insightData={insightData}
+              activeGoal={goal && !goal.is_completed ? goal : null}
+              motivationQuote={motivationQuote}
               onAddClick={() => setIsAddModalOpen(true)}
               onNavigateInsights={() => setActiveTab('insights')}
+              onRefreshInsights={refreshInsights}
+              insightsLoading={insightsLoading}
             />
           )}
           {activeTab === 'stats' && <Stats entries={entries} />}
           {activeTab === 'profile' && (
             <Profile entries={entries} userName={userName} userEmail={userEmail} onLogout={handleLogout} />
           )}
-          {activeTab === 'insights' && <Insights entries={entries} insightData={insightData} />}
+          {activeTab === 'insights' && (
+            <Insights 
+              entries={entries} 
+              insightData={insightData}
+              goal={goal}
+              onAddGoal={addGoal}
+              onRefreshInsights={refreshInsights}
+              insightsLoading={insightsLoading}
+            />
+          )}
         </>
       )}
 

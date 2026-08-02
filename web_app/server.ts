@@ -1,7 +1,17 @@
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
+
 import express from 'express';
 import path from 'path';
 import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI } from '@google/genai';
+import { createClient } from '@supabase/supabase-js';
+
+// Initialize Supabase Client
+const supabase = createClient(
+  'https://vibqxmlkgahdxwyecwxm.supabase.co',
+  process.env.SUPABASE_SERVICE_KEY!
+);
 
 // Initialize Gemini Client Lazily
 let ai: GoogleGenAI | null = null;
@@ -18,38 +28,44 @@ function getAI() {
 const app = express();
 app.use(express.json());
 
-// --- In-Memory DB ---
-export interface Entry {
-  id: string;
-  title: string;
-  amount: number;
-  category: string;
-  date: string; // ISO date
-}
-
-let entries: Entry[] = [
-  { id: '1', title: 'Vazgeçilen Getir Büyük Siparişi', amount: 350, category: 'Yemek', date: new Date().toISOString() },
-  { id: '2', title: 'Taksi Yerine Yürüyerek Dönüş', amount: 220, category: 'Ulaşım', date: new Date(Date.now() - 2 * 3600000).toISOString() },
-  { id: '3', title: 'İptal Edilen Netflix Aboneliği', amount: 149, category: 'Eğlence', date: new Date(Date.now() - 24 * 3600000).toISOString() },
-  { id: '4', title: 'Trendyol\'da Sepette Bırakılan Tişört', amount: 450, category: 'Giyim', date: new Date(Date.now() - 2 * 86400000).toISOString() },
-  { id: '5', title: 'Dışarıdan Kahve Söylemekten Vazgeçiş', amount: 120, category: 'İçecek', date: new Date(Date.now() - 4 * 86400000).toISOString() },
-  { id: '6', title: 'Alınmayan Amazon Prime Aboneliği', amount: 39, category: 'Teknoloji', date: new Date(Date.now() - 5 * 86400000).toISOString() },
-  { id: '7', title: 'Yemeksepeti Siparişi Yerine Evde Yemek', amount: 280, category: 'Yemek', date: new Date(Date.now() - 6 * 86400000).toISOString() },
-  { id: '8', title: 'Steam İndiriminde Alınmayan Oyunlar', amount: 650, category: 'Eğlence', date: new Date(Date.now() - 7 * 86400000).toISOString() },
-  { id: '9', title: 'Pahalı Yüz Kremi Almaktan Vazgeçiş', amount: 850, category: 'Kişisel Bakım', date: new Date(Date.now() - 8 * 86400000).toISOString() }
-];
-
 const CATEGORIES = ['Yemek', 'İçecek', 'Giyim', 'Eğlence', 'Ulaşım', 'Kişisel Bakım', 'Teknoloji', 'Diğer'];
+
+// skipped_items/savings_goals, user_id'ye FK ile bağlı; gerçek auth kullanıcıları
+// için public.users satırı otomatik oluşmadığından burada garanti ediyoruz.
+async function ensureUserRow(userId: string) {
+  await supabase.from('users').upsert({ user_id: userId }, { onConflict: 'user_id', ignoreDuplicates: true });
+}
 
 // --- API Routes ---
 
-app.get('/api/entries', (req, res) => {
-  res.json(entries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+app.get('/api/entries', async (req, res) => {
+  try {
+    const userId = req.headers['x-user-id'] as string || '00000000-0000-0000-0000-000000000000';
+    const { data, error } = await supabase
+      .from('skipped_items')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+    
+    if (error) return res.status(500).json({ error: error.message });
+    
+    res.json(data.map(d => ({
+      id: d.item_id,
+      title: d.item_name,
+      amount: d.price,
+      category: d.ai_category,
+      date: d.created_at
+    })));
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 app.post('/api/entries', async (req, res) => {
   try {
     const { title, amount, category } = req.body;
+    const userId = req.headers['x-user-id'] as string || '00000000-0000-0000-0000-000000000000';
+    await ensureUserRow(userId);
     let finalCategory = category;
 
     if (!finalCategory || finalCategory.trim() === '') {
@@ -80,36 +96,59 @@ Sadece kategori adını döndür (başka hiçbir kelime veya noktalama işareti 
        }
     }
 
-    const newEntry: Entry = {
-      id: Math.random().toString(36).substring(7),
-      title,
-      amount: Number(amount),
-      category: finalCategory,
-      date: new Date().toISOString()
-    };
+    // Supabase'e kaydet
+    const { data, error } = await supabase
+      .from('skipped_items')
+      .insert({
+        user_id: userId,
+        item_name: title,
+        price: Number(amount),
+        raw_category: category || '',
+        ai_category: finalCategory
+      })
+      .select()
+      .single();
 
-    entries.push(newEntry);
-    res.status(201).json(newEntry);
-  } catch (error) {
+    if (error) throw error;
+    
+    res.status(201).json({
+      id: data.item_id,
+      title: data.item_name,
+      amount: data.price,
+      category: data.ai_category,
+      date: data.created_at
+    });
+  } catch (error: any) {
     console.error('Error adding entry:', error);
-    res.status(500).json({ error: 'Failed to add entry' });
+    res.status(500).json({ error: error.message || 'Failed to add entry' });
   }
 });
 
 app.get('/api/insights', async (req, res) => {
     try {
-       const totalSavings = entries.reduce((sum, e) => sum + e.amount, 0);
+       const userId = req.headers['x-user-id'] as string || '00000000-0000-0000-0000-000000000000';
+       
+       // Supabase'den kullanıcının verilerini çek
+       const { data: entries, error } = await supabase
+         .from('skipped_items')
+         .select('*')
+         .eq('user_id', userId)
+         .order('created_at', { ascending: false });
+       
+       if (error) throw error;
+       
+       const totalSavings = entries.reduce((sum, e) => sum + e.price, 0);
 
        if (entries.length === 0) {
            return res.json({ insight: "İlk vazgeçişini ekle ve tasarruf etmeye başla!", savings: totalSavings, insightValue: 0 });
        }
        
        const aiClient = getAI();
-       const recentEntries = entries.slice(0, 10); // get newest 10 (sorted newest first in UI but array is push based, so let's just send all)
+       const recentEntries = entries.slice(0, 10);
        
        const prompt = `Bir tasarruf uygulamasındayız. Kullanıcı satın almaktan vazgeçtiği ürünleri buraya kaydediyor.
 Son vazgeçişleri şunlar:
-${JSON.stringify(recentEntries, null, 2)}
+${JSON.stringify(recentEntries.map(e => ({ item_name: e.item_name, price: e.price, category: e.ai_category })), null, 2)}
 
 Sen kullanıcının kişisel finans koçusun. Bu verilere dayanarak kullanıcıya motive edici, kısa (1-2 cümlelik) ve Türkçe bir içgörü/bildirim mesajı üret. 
 Örnek: "Yürüyerek eve dönmek yerine tercih ettiğin her adım, gece vardiyası taksi ücretlerini cüzdanına geri kazandırdı. Harika gidiyorsun!"
@@ -123,19 +162,266 @@ Sadece mesajı döndür.`;
        res.json({ 
            insight: response.text?.trim() || "Harika gidiyorsun, tasarruf etmeye devam et!",
            savings: totalSavings,
-           insightValue: entries[entries.length - 1].amount // Just showing the last saved amount for UI flair
+           insightValue: entries.length > 0 ? entries[0].price : 0
        });
     } catch (error) {
         console.error('Error generating insight:', error);
         
-        // Fallback for AI Quota/Rate Limit Errors
-        const totalSavings = entries.reduce((sum, e) => sum + e.amount, 0);
+        // Fallback
         res.json({ 
            insight: "Geçen aya göre harcamaların azaldı. Bu hızla devam edersen hedeflerine çok daha erken ulaşabilirsin!",
-           savings: totalSavings,
-           insightValue: entries.length > 0 ? entries[entries.length - 1].amount : 0
+           savings: 0,
+           insightValue: 0
         });
     }
+});
+
+// Manuel AI İçgörü Yenileme - Detaylı analiz üretir
+app.post('/api/insights/refresh', async (req, res) => {
+    try {
+       const userId = req.headers['x-user-id'] as string || '00000000-0000-0000-0000-000000000000';
+       
+       // Supabase'den kullanıcının verilerini çek
+       const { data: entries, error } = await supabase
+         .from('skipped_items')
+         .select('*')
+         .eq('user_id', userId)
+         .order('created_at', { ascending: false });
+       
+       if (error) throw error;
+       
+       const totalSavings = entries.reduce((sum, e) => sum + e.price, 0);
+
+       if (entries.length === 0) {
+           return res.json({ 
+             insight: "İlk vazgeçişini ekle ve tasarruf etmeye başla!", 
+             savings: totalSavings, 
+             insightValue: 0 
+           });
+       }
+       
+       const aiClient = getAI();
+       const recentEntries = entries.slice(0, 15);
+       
+       // Kategori analizi
+       const categoryCount: Record<string, number> = {};
+       recentEntries.forEach(e => {
+         categoryCount[e.ai_category] = (categoryCount[e.ai_category] || 0) + 1;
+       });
+       const topCategory = Object.entries(categoryCount).sort((a, b) => b[1] - a[1])[0]?.[0] || 'Diğer';
+       
+       // Saat analizi (basit - sadece örnek)
+       const mostActiveTimeRange = '19:00 - 23:00'; // Gerçek uygulamada created_at'tan hesaplanır
+       
+       // Detaylı AI Raporu
+       const detailedPrompt = `Bir tasarruf uygulamasında kullanıcı satın almaktan vazgeçtiği ürünleri kaydediyor.
+
+Kullanıcının son ${recentEntries.length} vazgeçişi:
+${JSON.stringify(recentEntries.map(e => ({ 
+  ürün: e.item_name, 
+  fiyat: e.price, 
+  kategori: e.ai_category,
+  tarih: e.created_at
+})), null, 2)}
+
+Toplam tasarruf: ${totalSavings} TL
+En çok vazgeçilen kategori: ${topCategory}
+En aktif zaman: ${mostActiveTimeRange}
+
+Sen bir kişisel finans koçusun. Lütfen 3 farklı içgörü üret ve JSON formatında döndür:
+
+{
+  "weeklyInsight": "Haftalık içgörü metni (1-2 cümle, motive edici)",
+  "budgetAdvice": "Bütçe tavsiyesi (2-3 cümle, pratik öneriler içeren)",
+  "personalizedReport": "Kişiselleştirilmiş analiz raporu (2-3 cümle, davranış kalıplarına odaklı)"
+}
+
+SADECE JSON döndür, başka metin ekleme.`;
+
+       const response = await aiClient.models.generateContent({
+         model: 'gemini-2.5-flash',
+         contents: detailedPrompt,
+       });
+
+       // JSON parse
+       let aiResponse;
+       try {
+         const text = response.text?.trim() || '{}';
+         // JSON'u çıkar (``` işaretlerini temizle)
+         const jsonText = text.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+         aiResponse = JSON.parse(jsonText);
+       } catch (e) {
+         console.error('JSON parse error:', e);
+         aiResponse = {
+           weeklyInsight: response.text?.trim() || "Harika gidiyorsun!",
+           budgetAdvice: "Vazgeçiş alışkanlığını sürdürerek hedeflerine ulaşabilirsin.",
+           personalizedReport: "Tasarruf davranışların gelişiyor."
+         };
+       }
+
+       res.json({ 
+           insight: aiResponse.weeklyInsight || "Harika gidiyorsun, tasarruf etmeye devam et!",
+           savings: totalSavings,
+           insightValue: entries.length > 0 ? entries[0].price : 0,
+           weeklyReport: {
+             summaryText: aiResponse.weeklyInsight || "Bu hafta harika gidiyorsun!",
+             topCategory: topCategory,
+             mostActiveTimeRange: mostActiveTimeRange
+           },
+           budgetAdvice: aiResponse.budgetAdvice || "Vazgeçiş alışkanlığını sürdürerek hedeflerine ulaşabilirsin.",
+           personalizedReport: {
+             summaryText: aiResponse.personalizedReport || "Tasarruf davranışların gelişiyor.",
+             topCategory: topCategory,
+             topCategoryChangePercent: 15,
+             mostActiveTimeRange: mostActiveTimeRange,
+             giveUpRateChangePercent: 20,
+             estimatedSavings: Math.round(totalSavings * 1.3)
+           }
+       });
+    } catch (error: any) {
+        console.error('Error generating detailed insights:', error);
+        res.status(500).json({ error: error.message || 'Failed to generate insights' });
+    }
+});
+
+// Günün Motivasyonu — kullanıcı başına günde bir kez AI ile üretilip önbelleklenir.
+const motivationCache = new Map<string, { date: string; quote: string }>();
+const MOTIVATION_THEMES = [
+  'sabırlı olmak', 'küçük adımlar', 'özgürlük', 'gelecek', 'disiplin',
+  'anlık zevklerden vazgeçmek', 'hayaller', 'bilinçli tüketim', 'irade gücü', 'birikim',
+];
+
+app.get('/api/motivation', async (req, res) => {
+  try {
+    const userId = req.headers['x-user-id'] as string || '00000000-0000-0000-0000-000000000000';
+    const today = new Date().toISOString().slice(0, 10);
+    const cached = motivationCache.get(userId);
+    if (cached && cached.date === today) {
+      return res.json({ quote: cached.quote });
+    }
+
+    const theme = MOTIVATION_THEMES[Math.floor(Math.random() * MOTIVATION_THEMES.length)];
+    const aiClient = getAI();
+    const prompt = `Bir tasarruf/birikim uygulaması için "${theme}" temasına dokunan, Türkçe, ilham verici, tek cümlelik bir "günün sözü" üret. Tırnak işareti veya başka açıklama ekleme, sadece sözü döndür.`;
+
+    const response = await aiClient.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+    });
+
+    const quote = response.text?.trim().replace(/^["']|["']$/g, '') ||
+      'Küçük tasarruflar, büyük özgürlüklerin temelidir.';
+
+    motivationCache.set(userId, { date: today, quote });
+    res.json({ quote });
+  } catch (error) {
+    console.error('Error generating motivation quote:', error);
+    res.json({
+      quote: 'Küçük tasarruflar, büyük özgürlüklerin temelidir. Bugün vazgeçtiğin her şey, yarınki hayaline bir adım daha yaklaştırır.',
+    });
+  }
+});
+
+// --- Hedef Belirleme (Savings Goal) ---
+// Ayrı bir tablo yok; hedef bilgisi doğrudan public.users satırında tutulur
+// (savings_goal, goal_title, goal_notified, completed_goals). Yeni hedef
+// eklerken eski hedef tamamlanmışsa onu completed_goals geçmişine ekliyoruz
+// ve goal_notified'ı false'a resetliyoruz (n8n otomasyonu tekrar mail
+// atabilsin diye). Not: Supabase tarafındaki set_new_goal(...) RPC'si
+// "column \"id\" does not exist" hatası veriyordu (fonksiyon users tablosuna
+// olmayan "id" kolonuyla erişmeye çalışıyordu — asıl PK "user_id"), bu yüzden
+// mantık doğrudan burada (supabase-js ile) uygulanıyor.
+app.get('/api/goals', async (req, res) => {
+  try {
+    const userId = req.headers['x-user-id'] as string || '00000000-0000-0000-0000-000000000000';
+    await ensureUserRow(userId);
+
+    const { data: userRow, error: userErr } = await supabase
+      .from('users')
+      .select('total_saved, savings_goal, goal_title')
+      .eq('user_id', userId)
+      .single();
+    if (userErr) throw userErr;
+
+    const totalSaved = Number(userRow?.total_saved || 0);
+    const targetAmount = userRow?.savings_goal != null ? Number(userRow.savings_goal) : null;
+
+    if (!targetAmount) {
+      return res.json(null);
+    }
+
+    res.json({
+      title: userRow?.goal_title || 'Hedefim',
+      target_amount: targetAmount,
+      is_completed: totalSaved >= targetAmount,
+    });
+  } catch (error: any) {
+    console.error('Error fetching goals:', error);
+    res.status(500).json({ error: error.message || 'Hedefler alınamadı' });
+  }
+});
+
+app.post('/api/goals', async (req, res) => {
+  try {
+    const userId = req.headers['x-user-id'] as string || '00000000-0000-0000-0000-000000000000';
+    await ensureUserRow(userId);
+
+    const title = typeof req.body.title === 'string' ? req.body.title.trim() : '';
+    const targetAmount = Number(req.body.targetAmount);
+
+    if (!title) {
+      return res.status(400).json({ error: 'Hedef başlığı gerekli.' });
+    }
+    if (!targetAmount || targetAmount <= 0) {
+      return res.status(400).json({ error: 'Geçerli bir hedef tutarı girilmeli.' });
+    }
+
+    const { data: userRow, error: userErr } = await supabase
+      .from('users')
+      .select('total_saved, savings_goal, goal_title, completed_goals')
+      .eq('user_id', userId)
+      .single();
+    if (userErr) throw userErr;
+
+    const totalSaved = Number(userRow?.total_saved || 0);
+    const currentTarget = userRow?.savings_goal != null ? Number(userRow.savings_goal) : null;
+
+    if (currentTarget && totalSaved < currentTarget) {
+      return res.status(400).json({ error: 'Yeni bir hedef eklemeden önce mevcut hedefi tamamlamalısın.' });
+    }
+
+    // Eski hedef varsa (tamamlanmış olmalı, aksi halde yukarıda engellenir) geçmişe ekle.
+    const completedGoals = Array.isArray(userRow?.completed_goals) ? userRow.completed_goals : [];
+    if (currentTarget) {
+      completedGoals.push({
+        title: userRow?.goal_title || 'Hedefim',
+        target_amount: currentTarget,
+        completed_at: new Date().toISOString(),
+      });
+    }
+
+    const { data, error } = await supabase
+      .from('users')
+      .update({
+        goal_title: title,
+        savings_goal: targetAmount,
+        goal_notified: false,
+        completed_goals: completedGoals,
+      })
+      .eq('user_id', userId)
+      .select('savings_goal, goal_title, total_saved')
+      .single();
+    if (error) throw error;
+
+    res.status(201).json({
+      title: data.goal_title,
+      target_amount: Number(data.savings_goal),
+      is_completed: Number(data.total_saved || 0) >= Number(data.savings_goal),
+    });
+  } catch (error: any) {
+    console.error('Error adding goal:', error);
+    res.status(500).json({ error: error.message || 'Hedef eklenemedi' });
+  }
 });
 
 // --- Vite Middleware (Development) / Static Serving (Production) ---

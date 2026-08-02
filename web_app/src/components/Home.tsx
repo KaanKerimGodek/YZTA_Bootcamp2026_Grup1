@@ -1,13 +1,18 @@
 import React from 'react';
-import { PiggyBank, Sparkles, Coffee, Plus, Shirt, Utensils, Gamepad2, Car, Laptop, Heart, Clock, Tag } from 'lucide-react';
-import { Entry, InsightData } from '../types';
-import { MOCK_INSIGHT_REPORTS, MOCK_STREAK_DAYS } from '../mockInsights';
+import { PiggyBank, Sparkles, Coffee, Plus, Shirt, Utensils, Gamepad2, Car, Laptop, Heart, Clock, Tag, RefreshCw } from 'lucide-react';
+import { Entry, InsightData, SavingsGoal } from '../types';
+import { MOCK_INSIGHT_REPORTS } from '../mockInsights';
+import { computeStreakDays } from '../insightsAnalytics';
 
 interface HomeProps {
   entries: Entry[];
   insightData: InsightData | null;
+  activeGoal?: SavingsGoal | null;
+  motivationQuote?: string;
   onAddClick?: () => void;
   onNavigateInsights?: () => void;
+  onRefreshInsights?: () => void;
+  insightsLoading?: boolean;
 }
 
 export const getCategoryStyle = (category: string) => {
@@ -23,14 +28,15 @@ export const getCategoryStyle = (category: string) => {
   }
 };
 
-export function Home({ entries, insightData, onAddClick, onNavigateInsights }: HomeProps) {
+export function Home({ entries, insightData, activeGoal, motivationQuote, onAddClick, onNavigateInsights, onRefreshInsights, insightsLoading }: HomeProps) {
   const formatMoney = (amount: number) => {
     return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(amount);
   };
 
   // Calculate total locally so it doesn't wait for insights API to show up
   const totalSavings = entries.reduce((sum, e) => sum + e.amount, 0);
-  const weeklyReport = MOCK_INSIGHT_REPORTS.weekly;
+  const weeklyReport = insightData?.weeklyReport || MOCK_INSIGHT_REPORTS.weekly;
+  const streakDays = computeStreakDays(entries);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-12 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 items-start">
@@ -55,19 +61,29 @@ export function Home({ entries, insightData, onAddClick, onNavigateInsights }: H
         </div>
 
         {/* Vazgeçiş Serisi (Streak) */}
-        {MOCK_STREAK_DAYS > 0 && (
+        {streakDays > 0 && (
           <div className="bg-orange-50 border border-orange-200 rounded-full px-4 py-2.5 text-center text-sm font-semibold text-orange-700">
-            🔥🔥 {MOCK_STREAK_DAYS} gün üst üste vazgeçiş serisi!
+            🔥🔥 {streakDays} gün üst üste vazgeçiş serisi!
           </div>
         )}
 
         {/* Haftalık İçgörü Kartı */}
         <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-amber-500 font-bold flex items-center gap-1">
-              <Sparkles size={16} /> AI
-            </span>
-            <h4 className="font-semibold text-slate-800">Haftalık İçgörü</h4>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-amber-500 font-bold flex items-center gap-1">
+                <Sparkles size={16} /> AI
+              </span>
+              <h4 className="font-semibold text-slate-800">Haftalık İçgörü</h4>
+            </div>
+            <button
+              onClick={onRefreshInsights}
+              disabled={insightsLoading}
+              className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-emerald-600 transition-colors disabled:opacity-50"
+              title="AI İçgörülerini Yenile"
+            >
+              <RefreshCw size={16} className={insightsLoading ? 'animate-spin' : ''} />
+            </button>
           </div>
           <p className="text-sm text-slate-500 leading-relaxed italic mb-4">
             "{weeklyReport.summaryText}"
@@ -93,15 +109,37 @@ export function Home({ entries, insightData, onAddClick, onNavigateInsights }: H
 
         {/* AI Insights Section */}
         <div className="bg-slate-800 rounded-3xl p-6 text-slate-200 shadow-sm">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-amber-400 font-bold flex items-center gap-1">
-              <Sparkles size={16} /> AI
-            </span>
-            <h4 className="font-semibold">Kişisel Bütçe Tavsiyesi</h4>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <span className="text-amber-400 font-bold flex items-center gap-1">
+                <Sparkles size={16} /> AI
+              </span>
+              <h4 className="font-semibold">Kişisel Bütçe Tavsiyesi</h4>
+            </div>
+            <button
+              onClick={onRefreshInsights}
+              disabled={insightsLoading}
+              className="p-2 rounded-lg hover:bg-white/10 text-slate-400 hover:text-emerald-400 transition-colors disabled:opacity-50"
+              title="AI Tavsiyesini Yenile"
+            >
+              <RefreshCw size={16} className={insightsLoading ? 'animate-spin' : ''} />
+            </button>
           </div>
           <p className="text-sm text-slate-300 leading-relaxed italic">
-            "{insightData?.insight || "Tasarruf verilerin yükleniyor. Senin için özel analizler hazırlıyorum..."}"
+            "{insightData?.budgetAdvice || "Tasarruf verilerin yükleniyor. Senin için özel analizler hazırlıyorum..."}"
           </p>
+          {!insightData?.budgetAdvice && entries.length > 0 && (
+            <div className="mt-4">
+              <button
+                onClick={onRefreshInsights}
+                disabled={insightsLoading}
+                className="text-sm font-semibold text-emerald-400 hover:text-emerald-300 transition-colors disabled:opacity-50 flex items-center gap-2"
+              >
+                <RefreshCw size={14} className={insightsLoading ? 'animate-spin' : ''} />
+                AI Tavsiyesini Oluştur
+              </button>
+            </div>
+          )}
           <div className="mt-6 pt-4 border-t border-slate-700">
             <button
               onClick={onNavigateInsights}
@@ -163,19 +201,36 @@ export function Home({ entries, insightData, onAddClick, onNavigateInsights }: H
         {/* Hedef Durumu & Günün Motivasyonu */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
-            <h4 className="text-xs font-bold text-slate-400 uppercase mb-4">Hedef Durumu: İtalya Tatili</h4>
-            <div className="flex justify-between items-end mb-2">
-              <span className="text-2xl font-bold text-slate-800">%32</span>
-              <span className="text-sm text-slate-500">{formatMoney(totalSavings).replace(',00', '')} / ₺10.000</span>
-            </div>
-            <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
-              <div className="h-full bg-emerald-500 transition-all duration-1000" style={{ width: `${Math.min(100, (totalSavings / 10000) * 100)}%` }}></div>
-            </div>
+            <h4 className="text-xs font-bold text-slate-400 uppercase mb-4">
+              Hedef Durumu{activeGoal ? `: ${activeGoal.title}` : ''}
+            </h4>
+            {activeGoal ? (
+              <>
+                <div className="flex justify-between items-end mb-2">
+                  <span className="text-2xl font-bold text-slate-800">
+                    %{Math.min(100, Math.round((totalSavings / activeGoal.target_amount) * 100))}
+                  </span>
+                  <span className="text-sm text-slate-500">
+                    {formatMoney(totalSavings).replace(',00', '')} / {formatMoney(activeGoal.target_amount).replace(',00', '')}
+                  </span>
+                </div>
+                <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-full bg-emerald-500 transition-all duration-1000" style={{ width: `${Math.min(100, (totalSavings / activeGoal.target_amount) * 100)}%` }}></div>
+                </div>
+              </>
+            ) : (
+              <button
+                onClick={onNavigateInsights}
+                className="text-sm text-emerald-600 font-semibold hover:underline text-left"
+              >
+                Henüz bir hedefin yok, İçgörüler sayfasından hedef belirle →
+              </button>
+            )}
           </div>
           <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
             <h4 className="text-xs font-bold text-slate-400 uppercase mb-2">Günün Motivasyonu</h4>
             <p className="text-sm font-medium text-slate-600 leading-snug italic">
-              "Küçük tasarruflar, büyük özgürlüklerin temelidir. Bugün vazgeçtiğin her şey, yarınki hayaline bir adım daha yaklaştırır."
+              "{motivationQuote || 'Senin için bugünün ilham verici sözü hazırlanıyor...'}"
             </p>
           </div>
         </div>

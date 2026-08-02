@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, LogIn, Zap } from 'lucide-react';
 import { GoogleIcon } from './icons/GoogleIcon';
+import { supabase } from '../supabaseClient';
 
 interface LoginProps {
-  onLogin: (email: string) => void;
+  onLogin: (email: string, userId: string) => void;
   onNavigateRegister: () => void;
 }
 
@@ -13,17 +14,22 @@ export function Login({ onLogin, onNavigateRegister }: LoginProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return;
-
     setIsSubmitting(true);
-    // NOT: Gerçek kimlik doğrulama (Supabase/Auth API) entegrasyonu sonraki
-    // sprintte eklenecek. Şimdilik giriş, girilen e-posta ile mock olarak kabul edilir.
-    window.setTimeout(() => {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) throw error;
+      onLogin(email, data.user?.id ?? '');
+    } catch (err: any) {
+      alert(err.message || 'Giriş başarısız.');
+    } finally {
       setIsSubmitting(false);
-      onLogin(email);
-    }, 400);
+    }
   };
 
   return (
@@ -141,7 +147,7 @@ export function Login({ onLogin, onNavigateRegister }: LoginProps) {
 
           <button
             type="button"
-            onClick={() => onLogin('test@vazgectim.app')}
+            onClick={() => onLogin('test@vazgectim.app', '00000000-0000-0000-0000-000000000000')}
             className="w-full bg-blue-50 border border-blue-200 text-blue-700 font-semibold py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-blue-100 transition-colors"
           >
             <Zap size={16} />

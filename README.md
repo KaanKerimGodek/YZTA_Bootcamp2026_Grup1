@@ -62,7 +62,6 @@ StackOverthink
 
 # ✨ Ürün Özellikleri
 
-- 🛒 Sanal Sepet Deneyimi
 - 💰 Tasarruf Cüzdanı
 - 📝 Günlük Vazgeçiş Kaydı
 - 📊 Harcama Alışkanlığı Takibi
@@ -241,6 +240,75 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 - Daily Scrum'lar olumsuz şartlar sebebiyle büyük ölçüde yazışma şeklinde yapıldı.
 - Trello üzerindeki görev takibinin daha aktif kullanılması proje yönetimini büyük ölçüde kolaylaştırdı.
 - Entegrasyon aşamalarının daha pürüzsüz geçmesi adına, sonraki sprintte arayüz ve altyapı testlerinin daha erken günlerde başlatılması planlanıyor.
+
+
+
+
+    ---
+# 🚀 Sprint 3
+
+•	Sprint-3 Backlog Dağıtımı — Cilalama ve Teslim (Polish & Delivery): UI/UX iyileştirme, hataların giderilmesi, kullanıcı testi, video ve son teslim dokümantasyonu. Amaç: "Ürün bütünlüğü" ve "Fonksiyonel yeterlilik" kriterlerini maksimize etmek
+
+•	Sprint-3 Board Update:[Sprint board screenshot](https://github.com/KaanKerimGodek/YZTA_Bootcamp2026_Grup1/tree/main/Backlog_Board/backlog3.PNG)
+
+  
+### Daily Scrum - WhatsApp Yazışmaları
+
+- Daily Scrum toplantıları Slack üzerinden yapılmaya devam edilmiştir. Yazışmalar ise WhatsApp ve Slack üzerinden yapılmıştır.
+[Sprint 3 Daily Scrum](https://github.com/KaanKerimGodek/YZTA_Bootcamp2026_Grup1/tree/main/Sprint3_Daily_Scrum)
+<img width="200" src="Sprint3_Daily_Scrum/sprint3.PNG"> 
+
+---
+
+### Sprint 3 board update: 
+- **Sprint Board Screenshot**: Görev takip ve paylaşımları Trello üzerinden yapılmaya devam edilmiştir.
+ 
+ <img src="images/Trello_3_1.PNG" style="width:310px; height:240px; object-fit:cover;">  <img src="images/Trello_3_2.PNG" style="width:310px; height:240px; object-fit:cover;">  <img src="images/Trello_3_3.PNG" style="width:310px; height:240px; object-fit:cover;"> 
+
+---
+
+### Ürün Durumu: 
+- **Ekran Görüntüleri**: Uygulamanın hem mobil hem de web tarafında son sprint için gereken nihai düzenlemeler yapılmış ve uygulama son halini almıştır.
+
+<div style="overflow-x: auto; white-space: nowrap;">
+
+| Profil(Mobil) | Anasayfa(Mobil) | İçgörü(Mobil) | Hedef(Mobil) | Hedef(Mobil) | Vazgeçiş(Mobil) | İstatistik(Mobil) | Harcamalarlar(Mobil) |
+|---|---|---|---|---|---|---|---|
+| <img src="images/Hedef.jpe" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/icgoruler.ng" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/hedef2.PG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/An.NG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/Hedef.jpe" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/icgoruler.ng" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/hedef2.PG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/An.NG" style="width:250px; height:300px; object-fit:cover;"> |
+
+</div>
+
+<div style="overflow-x: auto; white-space: nowrap;">
+
+| Mail | Anasayfa(Web) | Anasayfa(Web) | İçgörü(Web) | İçgörü(Web) | İçgörü(Web) | İstatistik(Web) | İstatistik(Web) |
+|---|---|---|---|---|---|---|---|
+| <img src="images/Hedef.jpe" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/icgoruler.ng" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/hedef2.PG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/An.NG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/Hedef.jpe" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/icgoruler.ng" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/hedef2.PG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/An.NG" style="width:250px; height:300px; object-fit:cover;"> |
+
+</div>
+
+---
+
+  ### Sprint Review:
+Sprint Review katılımcıları: Hüsna Altın, Elif İrem Akdoğan, Kaan Kerim Gödek, Yağız Ali Çolak.
+
+Sprint 3'ün temel hedefi; ürünü cilalamak, test etmek, veritabanı mantığını olgunlaştırmak ve final teslime hazır hale getirmekti.
+
+Tamamlanan:
+
+- Tasarruf Eşiği ve Bildirim Sistemi: Kullanıcı hedefine ulaştığında (total_saved >= savings_goal) n8n üzerinden otomatik tebrik e-postası gönderimi sağlandı.
+- UI/UX Son Rötuşlar: Mobil ve Web arayüzlerinde görsel geliştirmeler yapıldı, veri senkronizasyonu optimize edildi.
+- Sıfırlama ve Geçmiş Mantığı (RPC): Yeni hedef eklendiğinde bakiyenin sıfırlanması ve eski hedeflerin completed_goals arşive kaldırılması için Supabase veritabanı fonksiyonu yazıldı.
+- Performans ve Hata Ayıklama: Gemini API kota/rate-limit hataları çözüldü, n8n webhook yanıt formatı hem Web hem Mobil uyumlu hale getirildi.
+- Final Teslim Hazırlığı: GitHub reposu temizlendi, README güncellendi ve teslim formu eksiksiz dolduruldu.
+- Scrum boyunca büyük bir özveriyle çalışıldığı için ekip üyeleri birbirini tebrik etti
+
+
+
+  ### Sprint Retrospective:
+
+ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ
+
+
 
 
 

@@ -3,6 +3,7 @@ import { PiggyBank, Target, TrendingUp } from 'lucide-react';
 import { Entry } from '../types';
 import { getCategoryStyle } from './Home';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import type { TooltipValueType } from 'recharts';
 
 interface StatsProps {
   entries: Entry[];
@@ -140,7 +141,15 @@ export function Stats({ entries }: StatsProps) {
                       <Tooltip 
                         cursor={{ fill: '#f1f5f9' }}
                         contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                        formatter={(value: number) => [formatMoney(value), 'Toplam']}
+                        formatter={(value: TooltipValueType | undefined) => {
+                          const rawValue = Array.isArray(value) ? value[0] : value;
+                          const numericValue = typeof rawValue === 'number' ? rawValue : Number(rawValue);
+
+                          return [
+                          formatMoney(Number.isFinite(numericValue) ? numericValue : 0),
+                          'Toplam',
+                          ];
+                        }}
                       />
                       <Bar dataKey="toplam" fill="#f97316" radius={[4, 4, 0, 0]} />
                     </BarChart>
