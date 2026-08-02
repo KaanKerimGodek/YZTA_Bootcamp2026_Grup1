@@ -276,7 +276,7 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 
 | Ana Sayfa(Web) | İçgörü(Web) | Tasarruf Eşiği(Web) | Tetikleyici Anlar(Web) |
 |----------------|--------------------|--------------------|-------------------|
-|<img src="Son_durum/web/anasayfa2.png" style="width:250px; height:250px; object-fit:cover;"> |<img src="Son_durum/web/mail.PNG" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/içgörü1.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/içgörü2.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/içgörü3.png" style="width:250px; height:250px; object-fit:cover;"> |<img src="Son_durum/web/istatistik1.png" style="width:250px; height:250px; object-fit:cover;"> |<img src="Son_durum/web/istatistik2.png" style="width:250px; height:250px; object-fit:cover;"> |
+|<img src="Son_durum/web/anasayfa2.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/mail.PNG" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/içgörü1.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/içgörü2.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/içgörü3.png" style="width:250px; height:250px; object-fit:cover;"> |<img src="Son_durum/web/istatistik1.png" style="width:250px; height:250px; object-fit:cover;"> |<img src="Son_durum/web/istatistik2.png" style="width:250px; height:250px; object-fit:cover;"> |
 
 ---
 
