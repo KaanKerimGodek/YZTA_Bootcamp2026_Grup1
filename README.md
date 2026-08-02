@@ -270,9 +270,9 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 ### Ürün Durumu: 
 - **Ekran Görüntüleri**: Uygulamanın hem mobil hem de web tarafında son sprint için gereken nihai düzenlemeler yapılmış ve uygulama son halini almıştır.
 
-| Hedef(Mobil) | İçgörü(Mobil) | Vazgeçiş(Mobil) | İstatistik(Mobil) |İstatistik(Mobil) |Profil(Mobil) |
-|------------------|----------------------|----------------------|---------------|---------------|---------------|
-| <img src="Son_durum/mobil/hedef.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="Son_durum/mobil/icgoru.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="Son_durum/mobil/vazgecis_ekle.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="Son_durum/mobil/istatistikler.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="Son_durum/mobil/harcamalar.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="Son_durum/mobil/profil.png" style="width:250px; height:300px; object-fit:cover;"> |
+| Anasayfa(Mobil) | Hedef(Mobil) | İçgörü(Mobil) | Vazgeçiş(Mobil) | İstatistik(Mobil) |İstatistik(Mobil) |Profil(Mobil) |
+|------------------|------------------|----------------------|----------------------|---------------|---------------|---------------|
+| <img src="Son_durum/mobil/anasayfa.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="Son_durum/mobil/hedef.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="Son_durum/mobil/icgoru.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="Son_durum/mobil/vazgecis_ekle.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="Son_durum/mobil/istatistikler.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="Son_durum/mobil/harcamalar.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="Son_durum/mobil/profil.png" style="width:250px; height:300px; object-fit:cover;"> |
 
 | Mail | Anasayfa(Web) | İçgörü(Web) | İstatistik(Web) | İstatistik(Web) |
 |----------------|--------------------|--------------------|-------------------|-------------------|
