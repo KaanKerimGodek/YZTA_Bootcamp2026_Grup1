@@ -268,7 +268,7 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 ---
 
 ### Ürün Durumu: 
-- **Ekran Görüntüleri**: Uygulamanın hem mobil hem de web tarafında son sprint için gereken nihai düzenlemeler yapılmış ve uygulama son halini almıştır.
+- **Ekran Görüntüleri**: Uygulamanın hem mobil hem de web tarafında son sprint için gereken nihai düzenlemeler yapılmış ve uygulama son halini almıştır. Tüm görsellere ulaşmak için [TIKLAYINIZ](https://github.com/KaanKerimGodek/YZTA_Bootcamp2026_Grup1/tree/main/Son_durum)
 
 | Anasayfa(Mobil) | Hedef(Mobil) | İçgörü(Mobil) | Vazgeçiş(Mobil) | İstatistik(Mobil) |İstatistik(Mobil) |Profil(Mobil) |
 |------------------|------------------|----------------------|----------------------|---------------|---------------|---------------|
