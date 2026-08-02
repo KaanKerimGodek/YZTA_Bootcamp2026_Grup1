@@ -7,6 +7,7 @@ import '../../core/theme/app_shapes.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
 import '../../core/utils/responsive.dart';
+import '../../data/models/app_user.dart';
 import '../../data/models/auth_session.dart';
 import '../../data/providers/auth_providers.dart';
 import '../../data/providers/savings_providers.dart';
@@ -25,7 +26,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userAsync = ref.watch(userProvider);
+    final user = ref.watch(userProvider);
     final itemsAsync = ref.watch(recentItemsProvider);
     final insightsAsync = ref.watch(insightsProvider);
     final session = ref.watch(sessionProvider);
@@ -46,17 +47,13 @@ class HomeScreen extends ConsumerWidget {
             slivers: [
               const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.sm)),
               // Header
-              SliverToBoxAdapter(child: _Header(userAsync: userAsync, session: session)),
+              SliverToBoxAdapter(child: _Header(user: user, session: session)),
               const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
               // Hero Wallet Card
               SliverToBoxAdapter(
                 child: Padding(
                   padding: Responsive.screenHorizontal(context),
-                  child: userAsync.when(
-                    data: (user) => HeroWalletCard(totalSaved: user.totalSaved),
-                    loading: () => _HeroSkeleton(),
-                    error: (e, _) => _HeroSkeleton(),
-                  ),
+                  child: _HeroWallet(user: user),
                 ),
               ),
               // Weekly Achievement Badge (Hero Card altı)
@@ -71,21 +68,11 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
               const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
-              // Hedef Durumu Kartı
+              // Hedef Durumu Kartı - Dinamik
               SliverToBoxAdapter(
                 child: Padding(
                   padding: Responsive.screenHorizontal(context),
-                  child: userAsync.when(
-                    data: (user) => GoalStatusCard(
-                      goalName: 'İtalya Tatili',
-                      currentAmount: user.totalSaved * 0.31, // Demo: %31 ilerleme
-                      targetAmount: 10000,
-                      icon: Icons.flag_rounded,
-                      iconColor: AppColors.successEmerald,
-                    ),
-                    loading: () => const GoalStatusCardSkeleton(),
-                    error: (_, __) => const GoalStatusCardSkeleton(),
-                  ),
+                  child: _GoalCard(user: user),
                 ),
               ),
               const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
@@ -172,15 +159,15 @@ class HomeScreen extends ConsumerWidget {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({required this.userAsync, this.session});
-  final AsyncValue userAsync;
+  const _Header({required this.user, this.session});
+  final AppUser? user;
   final AuthSession? session;
 
   @override
   Widget build(BuildContext context) {
     // Öncelik: auth session'daki isim → userProvider'daki isim → varsayılan
     final name = session?.displayName ??
-        userAsync.valueOrNull?.displayName ??
+        user?.displayName ??
         'Vazgeçtim';
     final hour = DateTime.now().hour;
     final greeting = hour < 12
@@ -242,6 +229,18 @@ class _Header extends StatelessWidget {
   }
 }
 
+class _HeroWallet extends StatelessWidget {
+  const _HeroWallet({required this.user});
+  final AppUser? user;
+
+  @override
+  Widget build(BuildContext context) {
+    if (user == null) return _HeroSkeleton();
+    final u = user!;
+    return HeroWalletCard(totalSaved: u.totalSaved);
+  }
+}
+
 class _HeroSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -255,9 +254,74 @@ class _HeroSkeleton extends StatelessWidget {
   }
 }
 
+class _GoalCard extends StatelessWidget {
+  const _GoalCard({required this.user});
+  final AppUser? user;
+
+  @override
+  Widget build(BuildContext context) {
+    if (user == null) return const GoalStatusCardSkeleton();
+    final u = user!;
+
+    final hasGoal = u.goalTitle != null && u.goalTitle!.isNotEmpty;
+    final goalName = hasGoal ? u.goalTitle! : 'Hedef belirlemek için tıklayın';
+    final targetAmount = u.savingsGoal ?? 10000;
+    final currentAmount = u.totalSaved;
+    final isCompleted = u.isGoalCompleted;
+
+    return Column(
+      children: [
+        GoalStatusCard(
+          goalName: goalName,
+          currentAmount: currentAmount,
+          targetAmount: targetAmount,
+          icon: Icons.flag_rounded,
+          iconColor: AppColors.successEmerald,
+          onTap: () => context.push('/goal-settings'),
+        ),
+        if (isCompleted) ...[
+          const SizedBox(height: AppSpacing.sm),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.sm,
+            ),
+            decoration: BoxDecoration(
+              color: AppColors.successEmerald.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(AppShapes.lg),
+              border: Border.all(
+                color: AppColors.successEmerald.withOpacity(0.3),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.celebration_rounded,
+                  color: AppColors.successEmerald,
+                  size: 18,
+                ),
+                const SizedBox(width: AppSpacing.xs),
+                Text(
+                  '🎉 Tebrikler! Hedefinize ulaştınız!',
+                  style: AppTypography.bodyBold.copyWith(
+                    color: AppColors.successEmerald,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
 class _InsightCarousel extends StatelessWidget {
   const _InsightCarousel({required this.insightsAsync});
-  final AsyncValue insightsAsync;
+  final AsyncValue<List<dynamic>> insightsAsync;
 
   @override
   Widget build(BuildContext context) {

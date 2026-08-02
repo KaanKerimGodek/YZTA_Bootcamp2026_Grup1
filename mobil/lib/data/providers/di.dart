@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../repositories/mock_savings_repository.dart';
 import '../repositories/remote_savings_repository.dart';
@@ -26,6 +27,11 @@ final n8nWebhookServiceProvider = Provider<N8nWebhookService>((ref) {
   );
 });
 
+// Supabase Auth current user ID provider - returns a function to get current user ID
+final currentUserIdProvider = Provider<String? Function()>((ref) {
+  return () => Supabase.instance.client.auth.currentUser?.id;
+});
+
 // ---------------------------------------------------------------------------
 // Repository provider — mode'a göre mock ya da remote döner
 // ---------------------------------------------------------------------------
@@ -42,6 +48,6 @@ final savingsRepositoryProvider = Provider<SavingsRepository>((ref) {
     client: ref.watch(apiClientProvider),
     supabaseUrl: AppConfig.supabaseUrl,
     supabaseAnonKey: AppConfig.supabaseAnonKey,
-    userId: AppConfig.userId,
+    userIdProvider: ref.read(currentUserIdProvider),
   );
 });

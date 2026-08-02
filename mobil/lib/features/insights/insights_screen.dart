@@ -21,6 +21,7 @@ class InsightsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider);
     final itemsAsync = ref.watch(recentItemsProvider);
     final insightsAsync = ref.watch(insightsProvider);
 
@@ -120,7 +121,10 @@ class InsightsScreen extends ConsumerWidget {
               data: (items) => SliverToBoxAdapter(
                 child: Padding(
                   padding: Responsive.screenHorizontal(context),
-                  child: _MonthlyTrendCard(items: items),
+                  child: _MonthlyTrendCard(
+                    items: items,
+                    monthlyGoal: user?.monthlyGoal ?? 5000,
+                  ),
                 ),
               ),
               loading: () => SliverToBoxAdapter(
@@ -309,11 +313,12 @@ class _PatternCard extends StatelessWidget {
 // Aylık Trend Kartı
 // ---------------------------------------------------------------------------
 class _MonthlyTrendCard extends StatelessWidget {
-  const _MonthlyTrendCard({required this.items});
+  const _MonthlyTrendCard({
+    required this.items,
+    required this.monthlyGoal,
+  });
   final List<SkippedItem> items;
-
-  /// Bu ay için sabit hedef — ileride AppUser.monthlyGoal ile değiştirilebilir.
-  static const double _monthlyGoal = 5000;
+  final double monthlyGoal;
 
   @override
   Widget build(BuildContext context) {
@@ -329,7 +334,7 @@ class _MonthlyTrendCard extends StatelessWidget {
       }
     }
 
-    final progress = (monthTotal / _monthlyGoal).clamp(0.0, 1.0);
+    final progress = (monthTotal / monthlyGoal).clamp(0.0, 1.0);
     final progressPct = (progress * 100).round();
 
     return Container(
@@ -420,7 +425,7 @@ class _MonthlyTrendCard extends StatelessWidget {
                 ),
               ),
               Text(
-                '${Formatting.currency(_monthlyGoal, decimal: false)} hedef',
+                '${Formatting.currency(monthlyGoal, decimal: false)} hedef',
                 style: AppTypography.labelSubtext.copyWith(
                   color: AppColors.textSecondary,
                 ),

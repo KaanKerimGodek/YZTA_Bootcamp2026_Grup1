@@ -10,6 +10,7 @@ import '../features/auth/welcome_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/insights/insights_screen.dart';
 import '../features/profile/profile_screen.dart';
+import '../features/profile/goal_settings_screen.dart';
 import '../features/stats/stats_screen.dart';
 import '../shared/layouts/main_scaffold.dart';
 
@@ -115,6 +116,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) {
           return ModalBottomSheetPage(
             child: const AddTransactionSheet(),
+          );
+        },
+      ),
+      // Hedef Ayarları — modal bottom sheet route.
+      GoRoute(
+        name: 'goal-settings',
+        path: '/goal-settings',
+        pageBuilder: (context, state) {
+          return ModalBottomSheetPage(
+            child: const GoalSettingsScreen(),
           );
         },
       ),

@@ -60,6 +60,19 @@ class MockAuthService implements AuthService {
       );
       _users[testEmail] = _MockUser(password: testPassword, session: session);
     }
+
+    // Takım arkadaşının test hesabı
+    const teamTestEmail = 'test_user@gmail.com';
+    const teamTestPassword = '123asd456';
+    if (!_users.containsKey(teamTestEmail)) {
+      final session = AuthSession(
+        userId: _uuid.v4(),
+        email: teamTestEmail,
+        displayName: 'Test User',
+        createdAt: DateTime.now(),
+      );
+      _users[teamTestEmail] = _MockUser(password: teamTestPassword, session: session);
+    }
   }
 
   Future<void> _delayed() =>

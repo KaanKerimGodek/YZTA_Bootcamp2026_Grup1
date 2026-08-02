@@ -252,14 +252,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
 /// Geliştirici modunda hızlı giriş butonu.
 ///
-/// Test kullanıcısı (yacolak@test.com / yacolak123) ile tek tıkla giriş yapar.
+/// Test kullanıcısı (test_user@gmail.com / 123asd456) ile tek tıkla giriş yapar.
 class _QuickLoginButton extends ConsumerWidget {
   const _QuickLoginButton();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const testEmail = 'yacolak@test.com';
-    const testPassword = 'yacolak123';
+    const testEmail = 'test_user@gmail.com';
+    const testPassword = '123asd456';
 
     return TextButton.icon(
       onPressed: () async {

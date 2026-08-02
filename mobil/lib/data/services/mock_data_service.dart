@@ -111,9 +111,13 @@ class MockDataService {
   ];
 
   // --- API simülasyonu -------------------------------------------------
-  Future<AppUser> fetchUser() async => _delayed(() => _user);
+  Future<AppUser> fetchUser() async {
+    print('[MockDataService] fetchUser: ${_user.id}, totalSaved: ${_user.totalSaved}');
+    return _delayed(() => _user);
+  }
 
   Future<List<SkippedItem>> fetchRecentItems({int limit = 20}) async {
+    print('[MockDataService] fetchRecentItems: limit=$limit, totalItems=${_items.length}');
     return _delayed(() {
       final sorted = [..._items]
         ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
@@ -121,8 +125,10 @@ class MockDataService {
     });
   }
 
-  Future<List<AiInsight>> fetchInsights() async =>
-      _delayed(() => List.unmodifiable(_insights));
+  Future<List<AiInsight>> fetchInsights() async {
+    print('[MockDataService] fetchInsights: totalInsights=${_insights.length}');
+    return _delayed(() => List.unmodifiable(_insights));
+  }
 
   /// Yeni vazgeçiş ekler ve güncel toplamı döndürür.
   /// Basit bir keyword bazlı "AI kategorizasyonu" taklit eder.
@@ -132,6 +138,7 @@ class MockDataService {
     required double price,
     String? rawCategory,
   }) async {
+    print('[MockDataService] submit: $itemName, $price, category: $rawCategory');
     return _delayed(() {
       final aiCategory = _mockCategorize(itemName, rawCategory);
       final item = SkippedItem(
@@ -145,6 +152,7 @@ class MockDataService {
       );
       _items.insert(0, item);
       _user = _user.copyWith(totalSaved: _user.totalSaved + price);
+      print('[MockDataService] submit result: itemId=${item.id}, aiCategory=$aiCategory, newTotalSaved=${_user.totalSaved}');
       return (item: item, totalSaved: _user.totalSaved);
     });
   }

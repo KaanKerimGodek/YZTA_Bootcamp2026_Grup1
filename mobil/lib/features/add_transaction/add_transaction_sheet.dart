@@ -54,7 +54,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
       final price = double.tryParse(
               _priceController.text.replaceAll(',', '.')) ??
           0;
-      await submitVazgecis(
+      final result = await submitVazgecis(
         ref,
         itemName: _nameController.text,
         price: price,
@@ -62,6 +62,11 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
       );
 
       if (!mounted) return;
+
+      // Check if goal was completed
+      final userNotifier = ref.read(userProvider.notifier);
+      final wasCompleted = userNotifier.isGoalCompleted;
+
       // Kullanıcıya pozitif geri bildirim
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -85,7 +90,13 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
           ),
         ),
       );
-      context.pop();
+
+      // Check if goal just got completed (was not completed before, now completed)
+      if (!wasCompleted && userNotifier.isGoalCompleted && userNotifier.state != null) {
+        _showGoalCompletedDialog(userNotifier.state!.goalTitle ?? 'Hedefiniz');
+      } else {
+        context.pop();
+      }
     } on ApiException catch (e) {
       _showError(e.message);
     } catch (e) {
@@ -93,6 +104,105 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
+  }
+
+  void _showGoalCompletedDialog(String goalName) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppShapes.xl),
+        ),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(AppSpacing.xs),
+              decoration: BoxDecoration(
+                color: AppColors.successEmerald.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(AppShapes.md),
+              ),
+              child: const Icon(Icons.celebration_rounded,
+                  color: AppColors.successEmerald, size: 24),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            const Expanded(
+              child: Text(
+                '🎉 Hedef Tamamlandı!',
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '"$goalName" hedefinize ulaştınız!',
+              style: AppTypography.bodyMain.copyWith(
+                color: AppColors.textPrimary,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              'Harika bir disiplin! Yeni bir hedef belirleyip yolunuza devam edin.',
+              style: AppTypography.labelSubtext.copyWith(
+                color: AppColors.textSecondary,
+                height: 1.4,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.pop();
+            },
+            child: Text(
+              'Harika! Devam Et',
+              style: TextStyle(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w700,
+                fontSize: 16,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(ctx);
+              context.pop();
+              // Hedefi tamamla ve sıfırla, sonra hedef ayarlarına git
+              try {
+                await ref.read(userProvider.notifier).completeGoalAndReset();
+                if (mounted) {
+                  context.push('/goal-settings');
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Hata: $e'),
+                      backgroundColor: AppColors.error,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                }
+              }
+            },
+            child: Text(
+              'Yeni Hedef Belirle',
+              style: TextStyle(
+                color: AppColors.textSecondary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showError(String message) {

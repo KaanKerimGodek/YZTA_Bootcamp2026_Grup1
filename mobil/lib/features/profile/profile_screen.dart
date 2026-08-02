@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_shapes.dart';
@@ -7,6 +8,7 @@ import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
 import '../../core/utils/formatting.dart';
 import '../../core/utils/responsive.dart';
+import '../../data/models/app_user.dart';
 import '../../data/providers/auth_providers.dart';
 import '../../data/providers/savings_providers.dart';
 import '../../data/services/api_client.dart';
@@ -17,7 +19,7 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userAsync = ref.watch(userProvider);
+    final user = ref.watch(userProvider);
     final itemsAsync = ref.watch(recentItemsProvider);
     final session = ref.watch(sessionProvider);
 
@@ -53,16 +55,12 @@ class ProfileScreen extends ConsumerWidget {
             SliverToBoxAdapter(
               child: Padding(
                 padding: Responsive.screenHorizontal(context),
-                child: userAsync.when(
-                  data: (user) => _ProfileCard(
-                    name: session?.displayName ??
-                        user.displayName ??
-                        'Vazgeçtim Üyesi',
-                    email: session?.email ?? user.email ?? '',
-                    memberSince: user.createdAt,
-                  ),
-                  loading: () => const _ProfileCardPlaceholder(),
-                  error: (_, __) => const _ProfileCardPlaceholder(),
+                child: _ProfileCard(
+                  name: session?.displayName ??
+                      user?.displayName ??
+                      'Vazgeçtim Üyesi',
+                  email: session?.email ?? user?.email ?? '',
+                  memberSince: user?.createdAt ?? DateTime.now(),
                 ),
               ),
             ),
@@ -73,12 +71,30 @@ class ProfileScreen extends ConsumerWidget {
               child: Padding(
                 padding: Responsive.screenHorizontal(context),
                 child: _QuickStats(
-                  userAsync: userAsync,
+                  user: user,
                   itemsAsync: itemsAsync,
                 ),
               ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
+
+            // Tamamlanan Hedefler
+            if (user != null && user.completedGoals != null && user.completedGoals!.isNotEmpty) ...[
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: Responsive.screenHorizontal(context),
+                  child: const _SectionTitle('Tamamlanan Hedefler'),
+                ),
+              ),
+              const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.sm)),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: Responsive.screenHorizontal(context),
+                  child: _CompletedGoalsList(goals: user.completedGoals!),
+                ),
+              ),
+              const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
+            ],
 
             // Ayarlar bölümleri
             SliverToBoxAdapter(
@@ -91,11 +107,19 @@ class ProfileScreen extends ConsumerWidget {
             SliverToBoxAdapter(
               child: Padding(
                 padding: Responsive.screenHorizontal(context),
-                child: const _SettingsGroup(
+                child: _SettingsGroup(
                   items: [
                     _SettingsItem(
                       icon: Icons.person_outline_rounded,
                       label: 'Kişisel Bilgiler',
+                      onTap: () {
+                        // TODO: Kişisel bilgiler düzenleme ekranı
+                      },
+                    ),
+                    _SettingsItem(
+                      icon: Icons.flag_outlined,
+                      label: 'Hedef Ayarları',
+                      onTap: () => context.push('/goal-settings'),
                     ),
                     _SettingsItem(
                       icon: Icons.notifications_none_rounded,
@@ -240,30 +264,15 @@ class _ProfileCard extends StatelessWidget {
   }
 }
 
-class _ProfileCardPlaceholder extends StatelessWidget {
-  const _ProfileCardPlaceholder();
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 96,
-      decoration: BoxDecoration(
-        color: AppColors.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(AppShapes.xl),
-      ),
-    );
-  }
-}
-
 class _QuickStats extends StatelessWidget {
-  const _QuickStats({required this.userAsync, required this.itemsAsync});
-  final AsyncValue userAsync;
+  const _QuickStats({required this.user, required this.itemsAsync});
+  final AppUser? user;
   final AsyncValue<List<dynamic>> itemsAsync;
 
   @override
   Widget build(BuildContext context) {
-    final total = userAsync.valueOrNull?.totalSaved ?? 0;
+    final total = user?.totalSaved ?? 0;
     final count = itemsAsync.valueOrNull?.length ?? 0;
-    final avg = count > 0 ? total / count : 0.0;
     final biggest = itemsAsync.valueOrNull?.fold<double>(
           0,
           (a, e) {
@@ -356,6 +365,124 @@ class _SectionTitle extends StatelessWidget {
         color: AppColors.textSecondary,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.8,
+      ),
+    );
+  }
+}
+
+class _SettingsItem extends StatelessWidget {
+  const _SettingsItem({
+    required this.icon,
+    required this.label,
+    this.trailing,
+    this.onTap,
+  });
+  final IconData icon;
+  final String label;
+  final Widget? trailing;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: onTap,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppShapes.lg),
+      ),
+      leading: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          color: AppColors.surfaceContainer,
+          borderRadius: BorderRadius.circular(AppShapes.md),
+        ),
+        child: Icon(icon, color: AppColors.primary, size: 20),
+      ),
+      title: Text(
+        label,
+        style: AppTypography.bodyMain.copyWith(
+          color: AppColors.textPrimary,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      trailing: trailing ?? const Icon(Icons.chevron_right_rounded, color: AppColors.textSecondary),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs,
+      ),
+    );
+  }
+}
+
+class _SettingsGroup extends StatelessWidget {
+  const _SettingsGroup({required this.items});
+  final List<Widget> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(AppShapes.xl),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x10000000),
+            blurRadius: 12,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(AppShapes.xl),
+        child: Column(
+          children: [
+            for (int i = 0; i < items.length; i++) ...[
+              items[i],
+              if (i < items.length - 1)
+                const Divider(height: 1, indent: 64),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ModeBadge extends StatelessWidget {
+  const _ModeBadge({required this.mode});
+  final String mode;
+  @override
+  Widget build(BuildContext context) {
+    final isMock = AppConfig.isMock;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: (isMock ? AppColors.tertiary : AppColors.successEmerald)
+            .withOpacity(0.12),
+        borderRadius: BorderRadius.circular(AppShapes.full),
+      ),
+      child: Text(
+        mode,
+        style: AppTypography.labelSubtext.copyWith(
+          color: isMock ? AppColors.tertiary : AppColors.successEmerald,
+          fontWeight: FontWeight.w700,
+          fontSize: 11,
+        ),
+      ),
+    );
+  }
+}
+
+class _VersionBadge extends StatelessWidget {
+  const _VersionBadge({required this.version});
+  final String version;
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      version,
+      style: AppTypography.labelSubtext.copyWith(
+        color: AppColors.textSecondary,
       ),
     );
   }
@@ -476,9 +603,10 @@ class _LogoutButton extends StatelessWidget {
   }
 }
 
-class _SettingsGroup extends StatelessWidget {
-  const _SettingsGroup({required this.items});
-  final List<Widget> items;
+/// Tamamlanan hedefler listesi
+class _CompletedGoalsList extends StatelessWidget {
+  const _CompletedGoalsList({required this.goals});
+  final List<CompletedGoal> goals;
 
   @override
   Widget build(BuildContext context) {
@@ -499,9 +627,9 @@ class _SettingsGroup extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppShapes.xl),
         child: Column(
           children: [
-            for (int i = 0; i < items.length; i++) ...[
-              items[i],
-              if (i < items.length - 1)
+            for (int i = 0; i < goals.length; i++) ...[
+              _CompletedGoalTile(goal: goals[i]),
+              if (i < goals.length - 1)
                 const Divider(height: 1, indent: 64),
             ],
           ],
@@ -511,82 +639,58 @@ class _SettingsGroup extends StatelessWidget {
   }
 }
 
-class _SettingsItem extends StatelessWidget {
-  const _SettingsItem({
-    required this.icon,
-    required this.label,
-    this.trailing,
-  });
-  final IconData icon;
-  final String label;
-  final Widget? trailing;
+/// Tamamlanan hedef kartı (liste öğesi)
+class _CompletedGoalTile extends StatelessWidget {
+  const _CompletedGoalTile({required this.goal, super.key});
+  final CompletedGoal goal;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: () {},
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppShapes.lg),
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
       ),
-      leading: Container(
-        width: 36,
-        height: 36,
-        decoration: BoxDecoration(
-          color: AppColors.surfaceContainer,
-          borderRadius: BorderRadius.circular(AppShapes.md),
-        ),
-        child: Icon(icon, color: AppColors.primary, size: 20),
-      ),
-      title: Text(
-        label,
-        style: AppTypography.bodyMain.copyWith(
-          color: AppColors.textPrimary,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-      trailing: trailing ?? const Icon(Icons.chevron_right_rounded, color: AppColors.textSecondary),
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xs,
-      ),
-    );
-  }
-}
-
-class _ModeBadge extends StatelessWidget {
-  const _ModeBadge({required this.mode});
-  final String mode;
-  @override
-  Widget build(BuildContext context) {
-    final isMock = AppConfig.isMock;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: (isMock ? AppColors.tertiary : AppColors.successEmerald)
-            .withOpacity(0.12),
-        borderRadius: BorderRadius.circular(AppShapes.full),
-      ),
-      child: Text(
-        mode,
-        style: AppTypography.labelSubtext.copyWith(
-          color: isMock ? AppColors.tertiary : AppColors.successEmerald,
-          fontWeight: FontWeight.w700,
-          fontSize: 11,
-        ),
-      ),
-    );
-  }
-}
-
-class _VersionBadge extends StatelessWidget {
-  const _VersionBadge({required this.version});
-  final String version;
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      version,
-      style: AppTypography.labelSubtext.copyWith(
-        color: AppColors.textSecondary,
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: AppColors.successEmerald.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(AppShapes.md),
+            ),
+            child: const Icon(Icons.emoji_events_rounded, color: AppColors.successEmerald, size: 20),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  goal.goalTitle,
+                  style: AppTypography.bodyMain.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'Hedef: ${Formatting.currency(goal.targetAmount, decimal: false)} • '
+                  'Biriken: ${Formatting.currency(goal.totalSavedAtCompletion, decimal: false)} • '
+                  '${goal.durationDays} gün',
+                  style: AppTypography.labelSubtext.copyWith(color: AppColors.textSecondary),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            Formatting.date(goal.completedAt),
+            style: AppTypography.labelSubtext.copyWith(color: AppColors.textSecondary),
+          ),
+        ],
       ),
     );
   }

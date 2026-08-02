@@ -18,4 +18,20 @@ abstract class SavingsRepository {
     required double price,
     String? rawCategory,
   });
+
+  /// Kullanıcı hedef ayarlarını günceller.
+  Future<AppUser> updateGoalSettings({
+    String? goalTitle,
+    double? savingsGoal,
+    double? monthlyGoal,
+    String? currency,
+  });
+
+  /// Hedefi tamamlayıp tamamlananlar listesine ekler ve yeni hedef için sıfırlar.
+  /// Mevcut hedefi [completedGoals] listesine ekler, goalTitle/savingsGoal'ı null yapar.
+  Future<AppUser> completeGoalAndReset();
+
+  /// Hedefi tamamlar - lokal state'den gelen hedef verisiyle (optimistic update sonrası).
+  /// [completedGoal] parametresi ile hedef bilgisi doğrudan verilir, backend'e tekrar fetch yapmaz.
+  Future<AppUser> completeGoalWithData(CompletedGoal completedGoal);
 }
