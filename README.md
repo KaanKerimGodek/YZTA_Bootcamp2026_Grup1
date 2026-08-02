@@ -274,9 +274,9 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 |------------------|----------------------|----------------------|---------------|
 | <img src="images/Hedef.jpe" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/icgoruler.ng" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/hedef2.PG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/An.NG" style="width:250px; height:300px; object-fit:cover;"> |
 
-| Ana Sayfa(Web) | İçgörü(Web) | Tasarruf Eşiği(Web) | Tetikleyici Anlar(Web) |
+| Ana Sayfa(Web) |    Mail    | İçgörü(Web) | İçgörü(Web) |  İçgörü(Web) | İstatistik(Web) | İstatistik(Web) |
 |----------------|--------------------|--------------------|-------------------|
-|<img src="Son_durum/web/anasayfa2.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/mail.PNG" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/içgörü1.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/içgörü2.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/içgörü3.png" style="width:250px; height:250px; object-fit:cover;"> |<img src="Son_durum/web/istatistik1.png" style="width:250px; height:250px; object-fit:cover;"> |<img src="Son_durum/web/istatistik2.png" style="width:250px; height:250px; object-fit:cover;"> |
+|<img src="Son_durum/web/anasayfa2.png" style="width:300px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/mail.PNG" style="width:300px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/içgörü1.png" style="width:300px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/içgörü2.png" style="width:300px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/içgörü3.png" style="width:300px; height:250px; object-fit:cover;"> |<img src="Son_durum/web/istatistik1.png" style="width:300px; height:250px; object-fit:cover;"> |<img src="Son_durum/web/istatistik2.png" style="width:300px; height:250px; object-fit:cover;"> |
 
 ---
 
