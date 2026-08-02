@@ -291,7 +291,6 @@ Tamamlanan:
 - UI/UX Son Rötuşlar: Mobil ve Web arayüzlerinde görsel geliştirmeler yapıldı, veri senkronizasyonu optimize edildi.
 - Sıfırlama ve Geçmiş Mantığı (RPC): Yeni hedef eklendiğinde bakiyenin sıfırlanması ve eski hedeflerin completed_goals arşive kaldırılması için Supabase veritabanı fonksiyonu yazıldı.
 - Performans ve Hata Ayıklama: Gemini API kota/rate-limit hataları çözüldü, n8n webhook yanıt formatı hem Web hem Mobil uyumlu hale getirildi.
-- Dış Kullanıcı Testi: Gerçek kullanıcı geri bildirimleri toplandı, tespit edilen küçük aksaklıklar ve timeout sorunları düzeltildi.
 - Final Teslim Hazırlığı: GitHub reposu temizlendi, README güncellendi ve teslim formu eksiksiz dolduruldu.
 - Scrum boyunca büyük bir özveriyle çalışıldığı için ekip üyeleri birbirini tebrik etti
 
@@ -299,7 +298,7 @@ Tamamlanan:
 
   ### Sprint Retrospective:
 
- *******
+ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ ʚɞ
 
 
 
