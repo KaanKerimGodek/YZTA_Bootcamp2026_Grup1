@@ -274,9 +274,9 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 |------------------|------------------|----------------------|----------------------|---------------|---------------|---------------|
 | <img src="Son_durum/mobil/anasayfa.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="Son_durum/mobil/hedef.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="Son_durum/mobil/icgoru.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="Son_durum/mobil/vazgecis_ekle.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="Son_durum/mobil/istatistikler.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="Son_durum/mobil/harcamalar.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="Son_durum/mobil/profil.png" style="width:250px; height:300px; object-fit:cover;"> |
 
-| Mail | Anasayfa(Web) | İçgörü(Web) | İstatistik(Web) | İstatistik(Web) |
-|----------------|--------------------|--------------------|-------------------|-------------------|
-|<img src="Son_durum/web/mail.PNG" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/anasayfa2.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/içgörü1.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/istatistik1.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/istatistik2.png" style="width:250px; height:250px; object-fit:cover;"> |
+| Mail | Anasayfa(Web) | İçgörü(Web) | İçgörü(Web) | İstatistik(Web) | İstatistik(Web) |
+|----------------|--------------------|--------------------|--------------------|-------------------|-------------------|
+|<img src="Son_durum/web/mail.PNG" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/anasayfa1.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/içgörü1.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/içgörü2.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/istatistik1.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/istatistik2.png" style="width:250px; height:250px; object-fit:cover;"> |
 
 ---
 
