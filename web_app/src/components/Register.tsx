@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { User, Mail, Lock, Eye, EyeOff, UserPlus } from 'lucide-react';
 import { GoogleIcon } from './icons/GoogleIcon';
+import { supabase } from '../supabaseClient';
 
 interface RegisterProps {
-  onRegister: (name: string, email: string) => void;
+  onRegister: (name: string, email: string, userId: string) => void;
   onNavigateLogin: () => void;
 }
 
@@ -20,7 +21,7 @@ export function Register({ onRegister, onNavigateLogin }: RegisterProps) {
 
   const isValid = Boolean(firstName && lastName && email && password.length >= 6 && password === confirmPassword);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (password.length < 6) {
@@ -34,11 +35,21 @@ export function Register({ onRegister, onNavigateLogin }: RegisterProps) {
 
     setError('');
     setIsSubmitting(true);
-
-    window.setTimeout(() => {
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { display_name: `${firstName} ${lastName}`.trim() }
+        }
+      });
+      if (error) throw error;
+      onRegister(`${firstName} ${lastName}`.trim(), email, data.user?.id ?? '');
+    } catch (err: any) {
+      setError(err.message || 'Kayıt başarısız.');
+    } finally {
       setIsSubmitting(false);
-      onRegister(`${firstName} ${lastName}`.trim(), email);
-    }, 400);
+    }
   };
 
   return (

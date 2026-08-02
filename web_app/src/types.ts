@@ -21,6 +21,20 @@ export interface InsightData {
   insight: string;
   savings: number;
   insightValue: number;
+  weeklyReport?: {
+    summaryText: string;
+    topCategory: string;
+    mostActiveTimeRange: string;
+  };
+  budgetAdvice?: string;
+  personalizedReport?: {
+    summaryText: string;
+    topCategory: string;
+    topCategoryChangePercent: number;
+    mostActiveTimeRange: string;
+    giveUpRateChangePercent: number;
+    estimatedSavings: number;
+  };
 }
 
 // --- İçgörü (Insights) Sayfası Tipleri ---
@@ -47,12 +61,9 @@ export interface TriggerSlot {
 export type GoalType = 'tasarruf' | 'birikim' | 'aliskanlik';
 
 export interface SavingsGoal {
-  id: string;
   title: string;
-  type: GoalType;
-  target: number;
-  current: number;
-  unit?: string;
+  target_amount: number;
+  is_completed: boolean;
 }
 
 export interface Achievement {

@@ -12,41 +12,76 @@ import {
   CalendarClock,
   TrendingUp,
   Flag,
+  RefreshCw,
 } from 'lucide-react';
-import { Entry, InsightData, InsightPeriod } from '../types';
+import { Entry, InsightData, InsightPeriod, SavingsGoal } from '../types';
+import { MOCK_INSIGHT_REPORTS } from '../mockInsights';
 import {
-  MOCK_ACHIEVEMENTS,
-  MOCK_BEHAVIORAL_GROWTH,
-  MOCK_GOALS,
-  MOCK_INSIGHT_REPORTS,
-  MOCK_MONTHLY_TREND,
-  MOCK_SAVINGS_PATTERN,
-  MOCK_TRIGGER_SLOTS,
-} from '../mockInsights';
+  computeAchievements,
+  computeBehavioralGrowth,
+  computeMonthlyTrend,
+  computeSavingsPattern,
+  computeStreakDays,
+  computeTriggerSlots,
+} from '../insightsAnalytics';
 
 interface InsightsProps {
   entries: Entry[];
   insightData: InsightData | null;
+  goal: SavingsGoal | null;
+  onAddGoal: (title: string, targetAmount: number) => Promise<void>;
+  onRefreshInsights?: () => void;
+  insightsLoading?: boolean;
 }
 
-const goalTypeLabel: Record<string, string> = {
-  tasarruf: 'Tasarruf Hedefi',
-  birikim: 'Birikim Hedefi',
-  aliskanlik: 'Alışkanlık Hedefi',
-};
-
-export function Insights({ entries, insightData }: InsightsProps) {
+export function Insights({ entries, insightData, goal, onAddGoal, onRefreshInsights, insightsLoading }: InsightsProps) {
   const [period, setPeriod] = useState<InsightPeriod>('weekly');
-  const report = MOCK_INSIGHT_REPORTS[period];
+  const report = insightData?.personalizedReport || MOCK_INSIGHT_REPORTS[period];
+
+  const [isAddingGoal, setIsAddingGoal] = useState(false);
+  const [newGoalTitle, setNewGoalTitle] = useState('');
+  const [newGoalTarget, setNewGoalTarget] = useState('');
+  const [goalSubmitting, setGoalSubmitting] = useState(false);
+  const [goalError, setGoalError] = useState<string | null>(null);
 
   const formatMoney = (amount: number) => {
     return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 }).format(amount);
   };
 
-  const maxTriggerCount = useMemo(
-    () => Math.max(...MOCK_TRIGGER_SLOTS.map((t) => t.count), 1),
-    []
+  const totalSavings = entries.reduce((sum, e) => sum + e.amount, 0);
+  const activeGoal = goal && !goal.is_completed ? goal : null;
+
+  const streakDays = useMemo(() => computeStreakDays(entries), [entries]);
+  const behavioralGrowth = useMemo(() => computeBehavioralGrowth(entries), [entries]);
+  const savingsPattern = useMemo(() => computeSavingsPattern(entries), [entries]);
+  const monthlyTrend = useMemo(
+    () => computeMonthlyTrend(entries, activeGoal?.target_amount),
+    [entries, activeGoal]
   );
+  const triggerSlots = useMemo(() => computeTriggerSlots(entries), [entries]);
+  const achievements = useMemo(() => computeAchievements(entries, totalSavings), [entries, totalSavings]);
+  const latestUnlocked = [...achievements].reverse().find((a) => a.unlocked);
+
+  const maxTriggerCount = useMemo(
+    () => Math.max(...triggerSlots.map((t) => t.count), 1),
+    [triggerSlots]
+  );
+
+  const handleAddGoal = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setGoalSubmitting(true);
+    setGoalError(null);
+    try {
+      await onAddGoal(newGoalTitle.trim(), Number(newGoalTarget));
+      setNewGoalTitle('');
+      setNewGoalTarget('');
+      setIsAddingGoal(false);
+    } catch (err: any) {
+      setGoalError(err.message || 'Hedef eklenemedi.');
+    } finally {
+      setGoalSubmitting(false);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -83,14 +118,24 @@ export function Insights({ entries, insightData }: InsightsProps) {
         </div>
       </div>
 
-      {/* Kişiselleştirilmiş İçgörü Raporu */}
+      {/* Kişiselleştirilmiş İçgörü Raporu (AI) */}
       <div className="bg-slate-800 rounded-3xl p-6 md:p-8 text-slate-200 shadow-sm relative overflow-hidden">
         <div className="relative z-10">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-amber-400 font-bold flex items-center gap-1">
-              <Brain size={16} /> AI
-            </span>
-            <h3 className="font-semibold">Kişiselleştirilmiş İçgörü Raporu · {report.periodLabel}</h3>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <span className="text-amber-400 font-bold flex items-center gap-1">
+                <Brain size={16} /> AI
+              </span>
+              <h3 className="font-semibold">Kişiselleştirilmiş İçgörü Raporu{insightData?.personalizedReport ? ` · ${period === 'weekly' ? 'Bu Hafta' : 'Bu Ay'}` : ''}</h3>
+            </div>
+            <button
+              onClick={onRefreshInsights}
+              disabled={insightsLoading}
+              className="p-2 rounded-lg hover:bg-white/10 text-slate-400 hover:text-emerald-400 transition-colors disabled:opacity-50"
+              title="AI Raporunu Yenile"
+            >
+              <RefreshCw size={16} className={insightsLoading ? 'animate-spin' : ''} />
+            </button>
           </div>
           <p className="text-slate-100 leading-relaxed italic mb-6">"{report.summaryText}"</p>
 
@@ -100,7 +145,9 @@ export function Insights({ entries, insightData }: InsightsProps) {
               <CheckCircle2 size={18} className="text-emerald-400 shrink-0" />
               <span className="text-sm text-slate-200">
                 En çok vazgeçilen kategori: <strong className="text-white">{report.topCategory}</strong>{' '}
-                <span className="text-emerald-400">(+{report.topCategoryChangePercent}%)</span>
+                {insightData?.personalizedReport && (
+                  <span className="text-emerald-400">(+{report.topCategoryChangePercent}%)</span>
+                )}
               </span>
             </div>
             <div className="flex items-center gap-3">
@@ -109,21 +156,38 @@ export function Insights({ entries, insightData }: InsightsProps) {
                 En aktif saat: <strong className="text-white">{report.mostActiveTimeRange}</strong>
               </span>
             </div>
-            <div className="flex items-center gap-3">
-              <CheckCircle2 size={18} className="text-emerald-400 shrink-0" />
-              <span className="text-sm text-slate-200">
-                Vazgeçme oranı: <strong className="text-white">%{report.giveUpRateChangePercent} artış</strong>
-              </span>
-            </div>
-            <div className="flex items-center gap-3">
-              <CheckCircle2 size={18} className="text-emerald-400 shrink-0" />
-              <span className="text-sm text-slate-200">
-                Tahmini birikim: <strong className="text-white">{formatMoney(report.estimatedSavings)}</strong>
-              </span>
-            </div>
+            {insightData?.personalizedReport && (
+              <>
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 size={18} className="text-emerald-400 shrink-0" />
+                  <span className="text-sm text-slate-200">
+                    Vazgeçme oranı: <strong className="text-white">%{report.giveUpRateChangePercent} artış</strong>
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 size={18} className="text-emerald-400 shrink-0" />
+                  <span className="text-sm text-slate-200">
+                    Tahmini birikim: <strong className="text-white">{formatMoney(report.estimatedSavings)}</strong>
+                  </span>
+                </div>
+              </>
+            )}
           </div>
 
-          {insightData?.insight && (
+          {!insightData?.personalizedReport && entries.length > 0 && (
+            <div className="mt-4">
+              <button
+                onClick={onRefreshInsights}
+                disabled={insightsLoading}
+                className="text-sm font-semibold text-emerald-400 hover:text-emerald-300 transition-colors disabled:opacity-50 flex items-center gap-2"
+              >
+                <RefreshCw size={14} className={insightsLoading ? 'animate-spin' : ''} />
+                AI Raporunu Oluştur
+              </button>
+            </div>
+          )}
+
+          {insightData?.insight && insightData?.personalizedReport && (
             <p className="text-xs text-slate-400 mt-4">
               Son AI tavsiyesi: <span className="italic">"{insightData.insight}"</span>
             </p>
@@ -141,11 +205,11 @@ export function Insights({ entries, insightData }: InsightsProps) {
               <TrendingUp size={20} />
             </div>
             <p className="text-xl font-extrabold text-slate-800">
-              %{MOCK_BEHAVIORAL_GROWTH.improvementPercent} daha başarılı
+              %{behavioralGrowth.improvementPercent} daha başarılı
             </p>
             <p className="text-sm text-slate-400">
-              {MOCK_BEHAVIORAL_GROWTH.periodLabel} {MOCK_BEHAVIORAL_GROWTH.giveUpCount} vazgeçiş ·{' '}
-              {formatMoney(MOCK_BEHAVIORAL_GROWTH.savings)} tasarruf
+              {behavioralGrowth.periodLabel} {behavioralGrowth.giveUpCount} vazgeçiş ·{' '}
+              {formatMoney(behavioralGrowth.savings)} tasarruf
             </p>
           </div>
         </div>
@@ -155,8 +219,8 @@ export function Insights({ entries, insightData }: InsightsProps) {
             <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
               <Clock size={20} />
             </div>
-            <p className="text-xl font-extrabold text-slate-800">{MOCK_SAVINGS_PATTERN.timeRange}</p>
-            <p className="text-sm text-slate-400">{MOCK_SAVINGS_PATTERN.description}</p>
+            <p className="text-xl font-extrabold text-slate-800">{savingsPattern.timeRange}</p>
+            <p className="text-sm text-slate-400">{savingsPattern.description}</p>
           </div>
         </div>
       </div>
@@ -170,24 +234,24 @@ export function Insights({ entries, insightData }: InsightsProps) {
               <Flag size={20} />
             </div>
             <div>
-              <h4 className="font-bold text-slate-800">{MOCK_MONTHLY_TREND.title}</h4>
-              <p className="text-sm text-slate-500 mt-1">{MOCK_MONTHLY_TREND.description}</p>
+              <h4 className="font-bold text-slate-800">{monthlyTrend.title}</h4>
+              <p className="text-sm text-slate-500 mt-1">{monthlyTrend.description}</p>
             </div>
           </div>
           <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
             <div
               className="h-full bg-emerald-500 rounded-full transition-all duration-700"
-              style={{ width: `${Math.min(100, (MOCK_MONTHLY_TREND.current / MOCK_MONTHLY_TREND.target) * 100)}%` }}
+              style={{ width: `${Math.min(100, (monthlyTrend.current / monthlyTrend.target) * 100)}%` }}
             />
           </div>
           <div className="flex justify-between text-sm">
-            <span className="font-bold text-emerald-600">{formatMoney(MOCK_MONTHLY_TREND.current)} tasarruf</span>
-            <span className="text-slate-400">{formatMoney(MOCK_MONTHLY_TREND.target)} hedef</span>
+            <span className="font-bold text-emerald-600">{formatMoney(monthlyTrend.current)} tasarruf</span>
+            <span className="text-slate-400">{formatMoney(monthlyTrend.target)} hedef</span>
           </div>
         </div>
       </div>
 
-      {/* AI Analiz Pipeline (mock) */}
+      {/* AI Analiz Pipeline */}
       <div>
         <h3 className="text-lg font-bold text-slate-800 mb-4">AI Analiz Adımları</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -212,23 +276,29 @@ export function Insights({ entries, insightData }: InsightsProps) {
       <div>
         <h3 className="text-lg font-bold text-slate-800 mb-4">Zayıf Anların — Tetikleyici Analizi</h3>
         <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 shadow-sm flex flex-col gap-4">
-          {MOCK_TRIGGER_SLOTS.map((slot) => (
-            <div key={slot.label}>
-              <div className="flex justify-between items-center mb-1.5">
-                <span className="text-sm font-medium text-slate-600 flex items-center gap-2">
-                  <Clock size={14} className="text-slate-400" />
-                  {slot.label}
-                </span>
-                <span className="text-sm font-bold text-slate-800">{slot.count} kez</span>
+          {triggerSlots.length === 0 ? (
+            <p className="text-sm text-slate-400 text-center py-4">
+              Henüz yeterli veri yok. Vazgeçiş ekledikçe zayıf anların burada belirecek.
+            </p>
+          ) : (
+            triggerSlots.map((slot) => (
+              <div key={slot.label}>
+                <div className="flex justify-between items-center mb-1.5">
+                  <span className="text-sm font-medium text-slate-600 flex items-center gap-2">
+                    <Clock size={14} className="text-slate-400" />
+                    {slot.label}
+                  </span>
+                  <span className="text-sm font-bold text-slate-800">{slot.count} kez</span>
+                </div>
+                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-amber-400 rounded-full"
+                    style={{ width: `${Math.max(8, (slot.count / maxTriggerCount) * 100)}%` }}
+                  />
+                </div>
               </div>
-              <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-amber-400 rounded-full"
-                  style={{ width: `${Math.max(8, (slot.count / maxTriggerCount) * 100)}%` }}
-                />
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
 
@@ -236,28 +306,25 @@ export function Insights({ entries, insightData }: InsightsProps) {
       <div>
         <h3 className="text-lg font-bold text-slate-800 mb-4">Hedef Belirleme</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {MOCK_GOALS.map((goal) => {
-            const progress = Math.min(100, (goal.current / goal.target) * 100);
-            const reached = goal.current >= goal.target;
-            const unit = goal.unit ?? '₺';
+          {goal && (() => {
+            const progress = Math.min(100, (totalSavings / goal.target_amount) * 100);
+            const reached = goal.is_completed;
             return (
-              <div key={goal.id} className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col gap-3">
+              <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col gap-3">
                 <div className="flex items-center gap-2">
                   <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
                     <Target size={16} />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase">{goalTypeLabel[goal.type]}</p>
+                    <p className="text-xs font-bold text-slate-400 uppercase">{reached ? 'Tamamlanan Hedef' : 'Aktif Hedef'}</p>
                     <h4 className="text-sm font-bold text-slate-800">{goal.title}</h4>
                   </div>
                 </div>
                 <div className="flex justify-between items-end">
                   <span className="text-xl font-extrabold text-slate-800">
-                    {unit === '₺' ? formatMoney(goal.current) : `${goal.current} ${unit}`}
+                    {formatMoney(Math.min(totalSavings, goal.target_amount))}
                   </span>
-                  <span className="text-xs text-slate-400">
-                    / {unit === '₺' ? formatMoney(goal.target) : `${goal.target} ${unit}`}
-                  </span>
+                  <span className="text-xs text-slate-400">/ {formatMoney(goal.target_amount)}</span>
                 </div>
                 <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden">
                   <div
@@ -270,7 +337,64 @@ export function Insights({ entries, insightData }: InsightsProps) {
                 </span>
               </div>
             );
-          })}
+          })()}
+
+          {/* Yeni Hedef Ekle kartı */}
+          <div className="bg-white border border-dashed border-slate-300 rounded-3xl p-6 shadow-sm flex flex-col gap-3">
+            {activeGoal ? (
+              <>
+                <p className="text-xs font-bold text-slate-400 uppercase">Yeni Hedef Ekle</p>
+                <p className="text-sm text-slate-500">
+                  Yeni bir hedef ekleyebilmek için önce "<strong>{activeGoal.title}</strong>" hedefini tamamlaman gerekiyor.
+                </p>
+              </>
+            ) : isAddingGoal ? (
+              <form onSubmit={handleAddGoal} className="flex flex-col gap-3">
+                <input
+                  type="text"
+                  value={newGoalTitle}
+                  onChange={(e) => setNewGoalTitle(e.target.value)}
+                  placeholder="Hedef başlığı (örn. MacBook Air M3)"
+                  className="px-3 py-2 rounded-lg border border-slate-200 text-sm outline-none focus:border-emerald-500"
+                  required
+                />
+                <input
+                  type="number"
+                  value={newGoalTarget}
+                  onChange={(e) => setNewGoalTarget(e.target.value)}
+                  placeholder="Ulaşılacak tutar (₺)"
+                  min="1"
+                  className="px-3 py-2 rounded-lg border border-slate-200 text-sm outline-none focus:border-emerald-500"
+                  required
+                />
+                {goalError && <p className="text-xs text-red-500">{goalError}</p>}
+                <div className="flex gap-2">
+                  <button
+                    type="submit"
+                    disabled={goalSubmitting}
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 text-white text-sm font-bold py-2 rounded-lg transition-colors"
+                  >
+                    {goalSubmitting ? 'Ekleniyor...' : 'Hedefi Kaydet'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsAddingGoal(false)}
+                    className="px-3 py-2 text-sm text-slate-500 hover:text-slate-700"
+                  >
+                    Vazgeç
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <button
+                onClick={() => setIsAddingGoal(true)}
+                className="flex flex-col items-center justify-center gap-2 h-full text-emerald-600 font-semibold text-sm py-6"
+              >
+                <Target size={22} />
+                Yeni Hedef Ekle
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -282,7 +406,7 @@ export function Insights({ entries, insightData }: InsightsProps) {
         </h3>
         <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 shadow-sm">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            {MOCK_ACHIEVEMENTS.map((ach) => (
+            {achievements.map((ach) => (
               <div
                 key={ach.id}
                 className={`rounded-2xl p-4 flex flex-col items-center text-center gap-2 border ${
@@ -298,8 +422,14 @@ export function Insights({ entries, insightData }: InsightsProps) {
           <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-2xl px-4 py-3">
             <Bell size={18} className="text-emerald-600 shrink-0" />
             <p className="text-sm text-emerald-700">
-              <strong>Tebrikler! 🎉</strong> 3 gün üst üste vazgeçtin ve "🌙 Gece Bekçisi" rozetini kazandın. Küçük
-              adımların büyük bir tasarrufa dönüşüyor, bu hızla devam et!
+              {streakDays >= 3 && latestUnlocked ? (
+                <>
+                  <strong>Tebrikler! 🎉</strong> {streakDays} gün üst üste vazgeçtin ve "{latestUnlocked.emoji} {latestUnlocked.title}"
+                  rozetini kazandın. Küçük adımların büyük bir tasarrufa dönüşüyor, bu hızla devam et!
+                </>
+              ) : (
+                <>Vazgeçişlerine devam et, rozetlerini ve serini burada takip edeceksin!</>
+              )}
             </p>
           </div>
         </div>
