@@ -270,21 +270,13 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 ### Ürün Durumu: 
 - **Ekran Görüntüleri**: Uygulamanın hem mobil hem de web tarafında son sprint için gereken nihai düzenlemeler yapılmış ve uygulama son halini almıştır.
 
-<div style="overflow-x: auto; white-space: nowrap;">
+| Hedef(Mobil) | İçgörü(Mobil) | Tasarruf Eşiği(Mobil) | Tetikleyici Anlar(Mobil) |
+|------------------|----------------------|----------------------|---------------|
+| <img src="images/Hedef.jpeg" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/icgoruler.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/hedef2.PNG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/An.PNG" style="width:250px; height:300px; object-fit:cover;"> |
 
-| Profil(Mobil) | Anasayfa(Mobil) | İçgörü(Mobil) | Hedef(Mobil) | Hedef(Mobil) | Vazgeçiş(Mobil) | İstatistik(Mobil) | Harcamalarlar(Mobil) |
-|---|---|---|---|---|---|---|---|
-| <img src="images/Hedef.jpe" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/icgoruler.ng" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/hedef2.PG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/An.NG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/Hedef.jpe" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/icgoruler.ng" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/hedef2.PG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/An.NG" style="width:250px; height:300px; object-fit:cover;"> |
-
-</div>
-
-<div style="overflow-x: auto; white-space: nowrap;">
-
-| Mail | Anasayfa(Web) | Anasayfa(Web) | İçgörü(Web) | İçgörü(Web) | İçgörü(Web) | İstatistik(Web) | İstatistik(Web) |
-|---|---|---|---|---|---|---|---|
-| <img src="images/Hedef.jpe" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/icgoruler.ng" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/hedef2.PG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/An.NG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/Hedef.jpe" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/icgoruler.ng" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/hedef2.PG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/An.NG" style="width:250px; height:300px; object-fit:cover;"> |
-
-</div>
+| Mail | Anasayfa(Web) | İçgörü(Web) | İstatistik(Web) |
+|----------------|--------------------|--------------------|-------------------|
+|<img src="Son_durum/web/mail.PNG" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/anasayfa2.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/içgörü1.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/istatistik1.png" style="width:250px; height:250px; object-fit:cover;"> |
 
 ---
 
