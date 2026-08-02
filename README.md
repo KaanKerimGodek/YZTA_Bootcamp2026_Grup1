@@ -282,7 +282,7 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 
 |   Mail   | Anasayfa(Web) | Anasayfa(Web) | İçgörü(Web) | İçgörü(Web) | İçgörü(Web) | İstatistik(Web) | İstatistik(Web) |
 |--------|---|---|---|---|---|---|---|
-| <img src="Son_durum/web/mail.PNG" style="min-width: 250px; height: 300px; object-fit: cover;"> | <img src="images/icgoruler.ng" style="min-width: 250px; height: 300px; object-fit: cover;"> | <img src="images/hedef2.PG" style="min-width: 250px; height: 300px; object-fit: cover;"> | <img src="images/An.NG" style="min-width: 250px; height: 300px; object-fit: cover;"> | <img src="images/Hedef.jpe" style="min-width: 250px; height: 300px; object-fit: cover;"> | <img src="images/icgoruler.ng" style="min-width: 250px; height: 300px; object-fit: cover;"> | <img src="images/hedef2.PG" style="min-width: 250px; height: 300px; object-fit: cover;"> | <img src="images/An.NG" style="min-width: 250px; height: 300px; object-fit: cover;"> |
+| <img src="Son_durum/web/mail.PNG" style="min-width: 350px; height: 300px; object-fit: cover;"> | <img src="images/icgoruler.ng" style="min-width: 250px; height: 300px; object-fit: cover;"> | <img src="images/hedef2.PG" style="min-width: 250px; height: 300px; object-fit: cover;"> | <img src="images/An.NG" style="min-width: 250px; height: 300px; object-fit: cover;"> | <img src="images/Hedef.jpe" style="min-width: 250px; height: 300px; object-fit: cover;"> | <img src="images/icgoruler.ng" style="min-width: 250px; height: 300px; object-fit: cover;"> | <img src="images/hedef2.PG" style="min-width: 250px; height: 300px; object-fit: cover;"> | <img src="images/An.NG" style="min-width: 250px; height: 300px; object-fit: cover;"> |
 
 </div>
 
