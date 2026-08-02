@@ -274,9 +274,9 @@ Genel değerlendirme: Sprint hedefinin büyük bölümü başarıyla tamamlandı
 |------------------|----------------------|----------------------|---------------|
 | <img src="images/Hedef.jpeg" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/icgoruler.png" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/hedef2.PNG" style="width:250px; height:300px; object-fit:cover;"> | <img src="images/An.PNG" style="width:250px; height:300px; object-fit:cover;"> |
 
-| Mail | İçgörü(Web) | Tasarruf Eşiği(Web) | Tetikleyici Anlar(Web) |
+| Mail | Anasayfa(Web) | İçgörü(Web) | İstatistik(Web) |
 |----------------|--------------------|--------------------|-------------------|
-|<img src="Son_durum/web/mail.PNG" style="width:250px; height:250px; object-fit:cover;"> | <img src="images/web_icgoru1.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="images/web_icgoru3.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="images/web_icgoru2.png" style="width:250px; height:250px; object-fit:cover;"> |
+|<img src="Son_durum/web/mail.PNG" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/anasayfa2.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/içgörü1.png" style="width:250px; height:250px; object-fit:cover;"> | <img src="Son_durum/web/istatistik1.png" style="width:250px; height:250px; object-fit:cover;"> |
 
 ---
 
